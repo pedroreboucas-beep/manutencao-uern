@@ -1,1 +1,365 @@
-teste
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manutenção Predial — UERN</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root{
+  --tinta:#10242B;      /* texto e faixa de identidade */
+  --tinta-fraca:#4A6068;
+  --papel:#F2F4F3;      /* fundo */
+  --campo:#FFFFFF;
+  --linha:#C9D2D4;
+  --acao:#1F5D6B;       /* único acento institucional */
+  --acao-escura:#164752;
+  --alerta:#9E3520;
+  --ok:#2F6B4F;
+  --raio:3px;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--papel);
+  color:var(--tinta);
+  font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  font-size:16px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.01em}
+p{margin:0}
+button,input,select{font:inherit;color:inherit}
+
+/* ---------- entrada ---------- */
+#entrada{min-height:100vh;display:grid;grid-template-columns:1fr}
+@media (min-width:900px){ #entrada{grid-template-columns:5fr 4fr} }
+
+.marca{
+  background:var(--tinta);color:var(--papel);
+  padding:2.5rem 2rem;display:flex;flex-direction:column;justify-content:space-between;
+}
+.marca h1{font-size:clamp(1.75rem,4vw,2.6rem);line-height:1.1;font-weight:600;max-width:14ch}
+.marca .sub{margin-top:1rem;color:#A9C0C6;max-width:42ch}
+.marca .rodape{margin-top:2.5rem;font-size:.85rem;color:#7F9AA1;border-top:1px solid #24414A;padding-top:1rem}
+
+.acesso{padding:2.5rem 2rem;display:flex;align-items:center}
+.acesso .interno{width:100%;max-width:24rem;margin:0 auto}
+.acesso h2{font-size:1.15rem;margin-bottom:.35rem}
+.acesso .dica{color:var(--tinta-fraca);font-size:.9rem;margin-bottom:1.75rem}
+
+label{display:block;font-size:.9rem;margin-bottom:.35rem}
+input{
+  width:100%;padding:.65rem .75rem;background:var(--campo);
+  border:1px solid var(--linha);border-radius:var(--raio);
+}
+input:focus-visible{outline:2px solid var(--acao);outline-offset:1px;border-color:var(--acao)}
+.campo{margin-bottom:1.1rem}
+
+button.principal{
+  width:100%;padding:.7rem 1rem;background:var(--acao);color:#fff;
+  border:1px solid var(--acao);border-radius:var(--raio);cursor:pointer;font-weight:500;
+}
+button.principal:hover{background:var(--acao-escura);border-color:var(--acao-escura)}
+button.principal:disabled{opacity:.55;cursor:progress}
+button.principal:focus-visible{outline:2px solid var(--tinta);outline-offset:2px}
+button.discreto{
+  background:none;border:1px solid var(--linha);border-radius:var(--raio);
+  padding:.4rem .8rem;cursor:pointer;color:var(--tinta)
+}
+button.discreto:hover{border-color:var(--tinta-fraca)}
+
+.recado{padding:.7rem .8rem;border-radius:var(--raio);font-size:.9rem;margin-bottom:1.1rem}
+.recado.erro{background:#F6E4E0;color:var(--alerta);border:1px solid #E2BDB4}
+.recado.bom {background:#E2EFE8;color:var(--ok);border:1px solid #B9D6C6}
+
+/* ---------- área interna ---------- */
+#app{display:none;min-height:100vh;flex-direction:column}
+.topo{
+  background:var(--tinta);color:var(--papel);
+  padding:.85rem 1.25rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap
+}
+.topo .nome{font-weight:600}
+.topo .vinculo{color:#A9C0C6;font-size:.9rem}
+.topo .espaco{flex:1}
+.topo button{background:none;border:1px solid #35525B;color:var(--papel);
+  border-radius:var(--raio);padding:.35rem .8rem;cursor:pointer}
+.topo button:hover{border-color:#6E8B93}
+
+.selo{
+  display:inline-block;border:1px solid #35525B;border-radius:2rem;
+  padding:.1rem .6rem;font-size:.8rem;color:#C6DADF
+}
+
+main{padding:1.75rem 1.25rem;max-width:52rem;width:100%;margin:0 auto}
+.bloco{background:var(--campo);border:1px solid var(--linha);border-radius:var(--raio);
+  padding:1.25rem;margin-bottom:1.25rem}
+.bloco h3{font-size:1rem;margin-bottom:.25rem}
+.bloco .nota{color:var(--tinta-fraca);font-size:.9rem;margin-bottom:1rem}
+
+table{width:100%;border-collapse:collapse;font-size:.93rem}
+th,td{text-align:left;padding:.5rem .4rem;border-bottom:1px solid var(--linha)}
+th{font-weight:600;color:var(--tinta-fraca);font-size:.85rem}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:none}
+.veredito{font-weight:600}
+.veredito.ok{color:var(--ok)}
+.veredito.nao{color:var(--alerta)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ===================================================================
+     CONFIGURAÇÃO
+     A chave abaixo é a anon public. Ela é feita para ficar visível no
+     navegador. O que a torna segura é a RLS, testada na Fase 2: sem
+     usuário logado, ela não lê nenhuma linha de nenhuma tabela.
+     A chave service_role NUNCA entra neste arquivo.
+=================================================================== -->
+<script>
+const SUPABASE_URL  = "https://jdprmwoqqbiwtgvcuxrh.supabase.co";
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkcHJtd29xcWJpd3RndmN1eHJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1Njk5NzMsImV4cCI6MjEwNDE0NTk3M30.yKFSBsXjLxAPCfokEv6XIyEYyVW2GrqlJlaqCpOOWXA";
+</script>
+
+<!-- =============================== ENTRADA =============================== -->
+<section id="entrada">
+  <div class="marca">
+    <div>
+      <h1>Manutenção predial da UERN</h1>
+      <p class="sub">Abertura e acompanhamento de chamados de manutenção nas
+         unidades da universidade, com prazo, orçamento e histórico de cada serviço.</p>
+    </div>
+    <p class="rodape">Acesso restrito a servidores cadastrados e à empresa contratada.
+       Para obter acesso, procure a PROAD.</p>
+  </div>
+
+  <div class="acesso">
+    <div class="interno">
+
+      <!-- login -->
+      <div id="telaLogin">
+        <h2>Entrar</h2>
+        <p class="dica">Use o e-mail institucional cadastrado pela PROAD.</p>
+        <div id="avisoLogin"></div>
+        <div class="campo">
+          <label for="email">E-mail</label>
+          <input id="email" type="email" autocomplete="username" autofocus>
+        </div>
+        <div class="campo">
+          <label for="senha">Senha</label>
+          <input id="senha" type="password" autocomplete="current-password">
+        </div>
+        <button class="principal" id="btnEntrar">Entrar</button>
+      </div>
+
+      <!-- troca obrigatória -->
+      <div id="telaTroca" style="display:none">
+        <h2>Defina sua senha</h2>
+        <p class="dica">Este é seu primeiro acesso. Escolha uma senha de pelo menos
+           8 caracteres antes de continuar.</p>
+        <div id="avisoTroca"></div>
+        <div class="campo">
+          <label for="nova1">Nova senha</label>
+          <input id="nova1" type="password" autocomplete="new-password">
+        </div>
+        <div class="campo">
+          <label for="nova2">Repita a nova senha</label>
+          <input id="nova2" type="password" autocomplete="new-password">
+        </div>
+        <button class="principal" id="btnTrocar">Salvar senha</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- =============================== ÁREA INTERNA =============================== -->
+<div id="app">
+  <header class="topo">
+    <span class="nome" id="tNome"></span>
+    <span class="selo"  id="tPerfil"></span>
+    <span class="vinculo" id="tVinculo"></span>
+    <span class="espaco"></span>
+    <button id="btnSair">Sair</button>
+  </header>
+
+  <main>
+    <div class="bloco">
+      <h3>Verificação de acesso</h3>
+      <p class="nota">Esta tela é provisória. Ela existe para conferir, pela conexão
+         real do navegador, que cada perfil enxerga apenas o que deve. Some quando as
+         telas de chamado entrarem.</p>
+      <table>
+        <thead><tr><th>Tabela</th><th class="num">Linhas visíveis</th><th class="num">Esperado</th><th>Resultado</th></tr></thead>
+        <tbody id="corpoDiag"><tr><td colspan="4">Consultando…</td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="bloco">
+      <h3>Próximas telas</h3>
+      <p class="nota">Nada aqui ainda funciona. A ordem de construção é esta.</p>
+      <table>
+        <tbody>
+          <tr><td>Abrir chamado, acompanhar e validar</td><td>demandante</td></tr>
+          <tr><td>Receber, orçar e executar</td><td>empresa</td></tr>
+          <tr><td>Autorizar, controlar cota e emitir relatório</td><td>fiscalização</td></tr>
+          <tr><td>Parâmetros, feriados e tabela de preços</td><td>PROAD</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script>
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+const $ = id => document.getElementById(id);
+
+function recado(alvo, texto, tipo){
+  $(alvo).innerHTML = texto ? `<div class="recado ${tipo}">${texto}</div>` : "";
+}
+
+/* O Supabase devolve mensagens em inglês. Traduzimos as que o usuário
+   realmente encontra, e dizemos o que fazer, não só o que falhou. */
+function traduzir(msg){
+  const m = (msg || "").toLowerCase();
+  if (m.includes("invalid login")) return "E-mail ou senha não conferem.";
+  if (m.includes("email not confirmed")) return "Cadastro ainda não confirmado. Procure a PROAD.";
+  if (m.includes("rate limit") || m.includes("too many"))
+    return "Muitas tentativas seguidas. Espere um minuto e tente de novo.";
+  if (m.includes("password should be")) return "A senha precisa ter pelo menos 8 caracteres.";
+  if (m.includes("failed to fetch"))
+    return "Sem conexão com o servidor. Verifique a internet e tente de novo.";
+  return msg || "Não foi possível concluir.";
+}
+
+const NOME_PERFIL = {
+  ADMIN:"Administração", GESTOR_CONTRATO:"Gestão do contrato",
+  FISCAL_ADM:"Fiscalização administrativa", FISCAL_TECNICO:"Fiscalização técnica",
+  FISCAL_SETORIAL:"Fiscalização setorial", DEMANDANTE:"Unidade demandante",
+  EMPRESA:"Empresa contratada"
+};
+
+/* Quantas linhas cada perfil deve enxergar. Números que a Fase 2 provou
+   no banco; aqui a mesma pergunta é feita por HTTP, que é o caminho real. */
+function esperado(perfil){
+  const global = ["ADMIN","GESTOR_CONTRATO","FISCAL_ADM","FISCAL_TECNICO"].includes(perfil);
+  return {
+    chamado:  global ? "todos" : perfil === "DEMANDANTE" ? "só da sua unidade"
+                     : perfil === "EMPRESA" ? "todos do contrato" : "só da sua alçada",
+    contrato: global ? "1" : "0",
+    cota_unidade: (global || perfil === "DEMANDANTE" || perfil === "FISCAL_SETORIAL")
+                  ? "conforme alçada" : "0",
+    usuario:  global ? "todos" : perfil === "DEMANDANTE" ? "os da sua unidade" : "1",
+    unidade:  "44"
+  };
+}
+
+async function contar(tabela){
+  const { count, error } = await sb.from(tabela).select("*", { count:"exact", head:true });
+  return error ? "erro" : count;
+}
+
+async function montarDiagnostico(perfil){
+  const alvo = esperado(perfil);
+  const linhas = [];
+  for (const t of ["chamado","unidade","contrato","cota_unidade","usuario"]){
+    const n = await contar(t);
+    const ok = (alvo[t] === "44" && n === 44) || (alvo[t] === "1" && n === 1)
+            || (alvo[t] === "0" && n === 0)  || !["44","1","0"].includes(alvo[t]);
+    linhas.push(`<tr>
+      <td>${t}</td>
+      <td class="num">${n}</td>
+      <td class="num">${alvo[t]}</td>
+      <td class="veredito ${ok?"ok":"nao"}">${ok?"confere":"conferir"}</td></tr>`);
+  }
+  $("corpoDiag").innerHTML = linhas.join("");
+}
+
+async function abrirApp(p){
+  $("entrada").style.display = "none";
+  $("app").style.display = "flex";
+  $("tNome").textContent   = p.nome_completo;
+  $("tPerfil").textContent = NOME_PERFIL[p.perfil] || p.perfil;
+  $("tVinculo").textContent = p.unidade_nome
+      ? p.unidade_nome + (p.predio_nome ? " · " + p.predio_nome : "")
+      : (p.empresa_nome || "");
+  await montarDiagnostico(p.perfil);
+}
+
+async function carregarPerfil(){
+  const { data:{ user } } = await sb.auth.getUser();
+  if (!user) return null;
+  const { data, error } = await sb.from("v_meu_perfil").select("*").eq("id", user.id).single();
+  if (error || !data) return null;
+  return data;
+}
+
+async function seguir(){
+  const p = await carregarPerfil();
+  if (!p){
+    recado("avisoLogin","Seu login funcionou, mas você ainda não tem perfil cadastrado no sistema. Procure a PROAD.","erro");
+    await sb.auth.signOut();
+    return;
+  }
+  if (!p.ativo){
+    recado("avisoLogin","Seu acesso está desativado. Procure a PROAD.","erro");
+    await sb.auth.signOut();
+    return;
+  }
+  if (p.precisa_trocar_senha){
+    $("telaLogin").style.display = "none";
+    $("telaTroca").style.display = "block";
+    $("nova1").focus();
+    return;
+  }
+  await abrirApp(p);
+}
+
+$("btnEntrar").onclick = async () => {
+  recado("avisoLogin","");
+  const b = $("btnEntrar"); b.disabled = true; b.textContent = "Entrando…";
+  const { error } = await sb.auth.signInWithPassword({
+    email: $("email").value.trim(), password: $("senha").value
+  });
+  b.disabled = false; b.textContent = "Entrar";
+  if (error){ recado("avisoLogin", traduzir(error.message), "erro"); return; }
+  await seguir();
+};
+
+$("senha").addEventListener("keydown", e => { if (e.key === "Enter") $("btnEntrar").click(); });
+
+$("btnTrocar").onclick = async () => {
+  recado("avisoTroca","");
+  const a = $("nova1").value, b = $("nova2").value;
+  if (a.length < 8) return recado("avisoTroca","A senha precisa ter pelo menos 8 caracteres.","erro");
+  if (a !== b)      return recado("avisoTroca","As duas senhas não são iguais.","erro");
+  const bt = $("btnTrocar"); bt.disabled = true; bt.textContent = "Salvando…";
+  const { error } = await sb.auth.updateUser({ password: a });
+  if (error){ bt.disabled=false; bt.textContent="Salvar senha";
+              return recado("avisoTroca", traduzir(error.message), "erro"); }
+  const { error: e2 } = await sb.rpc("marcar_senha_trocada");
+  bt.disabled = false; bt.textContent = "Salvar senha";
+  if (e2) return recado("avisoTroca", traduzir(e2.message), "erro");
+  const p = await carregarPerfil();
+  $("telaTroca").style.display = "none";
+  $("telaLogin").style.display = "block";
+  await abrirApp(p);
+};
+
+$("btnSair").onclick = async () => { await sb.auth.signOut(); location.reload(); };
+
+/* Sessão já aberta: entra direto. */
+(async () => {
+  const { data:{ session } } = await sb.auth.getSession();
+  if (session) await seguir();
+})();
+</script>
+</body>
+</html>
+
