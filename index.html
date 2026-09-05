@@ -261,7 +261,7 @@ function esperado(perfil){
 }
 
 async function contar(tabela){
-  const { count, error } = await sb.from(tabela).select("*", { count:"exact", head:true });
+  const { count, error } = await sb.from(tabela).select("id", { count:"exact", head:true });
   return error ? "erro" : count;
 }
 
