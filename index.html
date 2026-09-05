@@ -4,112 +4,140 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Manutenção Predial — UERN</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 :root{
-  --tinta:#10242B;      /* texto e faixa de identidade */
-  --tinta-fraca:#4A6068;
-  --papel:#F2F4F3;      /* fundo */
-  --campo:#FFFFFF;
-  --linha:#C9D2D4;
-  --acao:#1F5D6B;       /* único acento institucional */
-  --acao-escura:#164752;
-  --alerta:#9E3520;
-  --ok:#2F6B4F;
-  --raio:3px;
+  --tinta:#10242B; --tinta-fraca:#4A6068; --papel:#F2F4F3; --campo:#FFFFFF;
+  --linha:#C9D2D4; --acao:#1F5D6B; --acao-escura:#164752;
+  --alerta:#9E3520; --risco:#8A6410; --ok:#2F6B4F; --raio:3px;
 }
-
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-body{
-  background:var(--papel);
-  color:var(--tinta);
+body{background:var(--papel);color:var(--tinta);
   font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
-  font-size:16px;
-  line-height:1.5;
-  -webkit-font-smoothing:antialiased;
-}
+  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.01em}
 p{margin:0}
-button,input,select{font:inherit;color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--acao)}
 
 /* ---------- entrada ---------- */
 #entrada{min-height:100vh;display:grid;grid-template-columns:1fr}
-@media (min-width:900px){ #entrada{grid-template-columns:5fr 4fr} }
-
-.marca{
-  background:var(--tinta);color:var(--papel);
-  padding:2.5rem 2rem;display:flex;flex-direction:column;justify-content:space-between;
-}
-.marca h1{font-size:clamp(1.75rem,4vw,2.6rem);line-height:1.1;font-weight:600;max-width:14ch}
+@media (min-width:900px){#entrada{grid-template-columns:5fr 4fr}}
+.marca{background:var(--tinta);color:var(--papel);padding:2.5rem 2rem;
+  display:flex;flex-direction:column;justify-content:space-between}
+.marca h1{font-size:clamp(1.75rem,4vw,2.6rem);line-height:1.1;max-width:14ch}
 .marca .sub{margin-top:1rem;color:#A9C0C6;max-width:42ch}
-.marca .rodape{margin-top:2.5rem;font-size:.85rem;color:#7F9AA1;border-top:1px solid #24414A;padding-top:1rem}
-
+.marca .rodape{margin-top:2.5rem;font-size:.85rem;color:#7F9AA1;
+  border-top:1px solid #24414A;padding-top:1rem}
 .acesso{padding:2.5rem 2rem;display:flex;align-items:center}
 .acesso .interno{width:100%;max-width:24rem;margin:0 auto}
 .acesso h2{font-size:1.15rem;margin-bottom:.35rem}
 .acesso .dica{color:var(--tinta-fraca);font-size:.9rem;margin-bottom:1.75rem}
 
 label{display:block;font-size:.9rem;margin-bottom:.35rem}
-input{
-  width:100%;padding:.65rem .75rem;background:var(--campo);
-  border:1px solid var(--linha);border-radius:var(--raio);
-}
-input:focus-visible{outline:2px solid var(--acao);outline-offset:1px;border-color:var(--acao)}
+.obrig::after{content:" (obrigatório)";color:var(--tinta-fraca);font-size:.82rem}
+input,select,textarea{width:100%;padding:.65rem .75rem;background:var(--campo);
+  border:1px solid var(--linha);border-radius:var(--raio)}
+textarea{min-height:5.5rem;resize:vertical}
+input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--acao);outline-offset:1px;border-color:var(--acao)}
 .campo{margin-bottom:1.1rem}
+.ajuda{font-size:.85rem;color:var(--tinta-fraca);margin-top:.3rem}
 
-button.principal{
-  width:100%;padding:.7rem 1rem;background:var(--acao);color:#fff;
-  border:1px solid var(--acao);border-radius:var(--raio);cursor:pointer;font-weight:500;
-}
+button.principal{padding:.7rem 1.1rem;background:var(--acao);color:#fff;
+  border:1px solid var(--acao);border-radius:var(--raio);cursor:pointer;font-weight:500}
+button.principal.larga{width:100%}
 button.principal:hover{background:var(--acao-escura);border-color:var(--acao-escura)}
 button.principal:disabled{opacity:.55;cursor:progress}
 button.principal:focus-visible{outline:2px solid var(--tinta);outline-offset:2px}
-button.discreto{
-  background:none;border:1px solid var(--linha);border-radius:var(--raio);
-  padding:.4rem .8rem;cursor:pointer;color:var(--tinta)
-}
+button.discreto{background:none;border:1px solid var(--linha);border-radius:var(--raio);
+  padding:.45rem .9rem;cursor:pointer;color:var(--tinta)}
 button.discreto:hover{border-color:var(--tinta-fraca)}
 
 .recado{padding:.7rem .8rem;border-radius:var(--raio);font-size:.9rem;margin-bottom:1.1rem}
 .recado.erro{background:#F6E4E0;color:var(--alerta);border:1px solid #E2BDB4}
-.recado.bom {background:#E2EFE8;color:var(--ok);border:1px solid #B9D6C6}
+.recado.bom{background:#E2EFE8;color:var(--ok);border:1px solid #B9D6C6}
+.recado.atencao{background:#F5EEDC;color:var(--risco);border:1px solid #DFCFA6}
 
 /* ---------- área interna ---------- */
 #app{display:none;min-height:100vh;flex-direction:column}
-.topo{
-  background:var(--tinta);color:var(--papel);
-  padding:.85rem 1.25rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap
-}
+.topo{background:var(--tinta);color:var(--papel);padding:.85rem 1.25rem;
+  display:flex;gap:.9rem;align-items:center;flex-wrap:wrap}
 .topo .nome{font-weight:600}
 .topo .vinculo{color:#A9C0C6;font-size:.9rem}
 .topo .espaco{flex:1}
 .topo button{background:none;border:1px solid #35525B;color:var(--papel);
   border-radius:var(--raio);padding:.35rem .8rem;cursor:pointer}
 .topo button:hover{border-color:#6E8B93}
+.selo{display:inline-block;border:1px solid #35525B;border-radius:2rem;
+  padding:.1rem .6rem;font-size:.8rem;color:#C6DADF}
 
-.selo{
-  display:inline-block;border:1px solid #35525B;border-radius:2rem;
-  padding:.1rem .6rem;font-size:.8rem;color:#C6DADF
-}
+main{padding:1.5rem 1.25rem;max-width:56rem;width:100%;margin:0 auto}
+.barra{display:flex;gap:.6rem;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap}
+.barra h2{font-size:1.25rem}
+.barra .espaco{flex:1}
 
-main{padding:1.75rem 1.25rem;max-width:52rem;width:100%;margin:0 auto}
-.bloco{background:var(--campo);border:1px solid var(--linha);border-radius:var(--raio);
-  padding:1.25rem;margin-bottom:1.25rem}
+.bloco{background:var(--campo);border:1px solid var(--linha);
+  border-radius:var(--raio);padding:1.25rem;margin-bottom:1rem}
 .bloco h3{font-size:1rem;margin-bottom:.25rem}
 .bloco .nota{color:var(--tinta-fraca);font-size:.9rem;margin-bottom:1rem}
 
-table{width:100%;border-collapse:collapse;font-size:.93rem}
-th,td{text-align:left;padding:.5rem .4rem;border-bottom:1px solid var(--linha)}
-th{font-weight:600;color:var(--tinta-fraca);font-size:.85rem}
-td.num{text-align:right;font-variant-numeric:tabular-nums}
-tr:last-child td{border-bottom:none}
-.veredito{font-weight:600}
-.veredito.ok{color:var(--ok)}
-.veredito.nao{color:var(--alerta)}
+/* cartão de chamado */
+.chamado{background:var(--campo);border:1px solid var(--linha);border-radius:var(--raio);
+  padding:1rem 1.1rem;margin-bottom:.7rem;cursor:pointer;display:block;width:100%;
+  text-align:left;border-left-width:4px}
+.chamado:hover{border-color:var(--tinta-fraca)}
+.chamado:focus-visible{outline:2px solid var(--acao);outline-offset:2px}
+.chamado .linha1{display:flex;gap:.6rem;align-items:baseline;flex-wrap:wrap}
+.chamado .num{font-variant-numeric:tabular-nums;color:var(--tinta-fraca);font-size:.88rem}
+.chamado .tit{font-weight:600}
+.chamado .linha2{color:var(--tinta-fraca);font-size:.9rem;margin-top:.2rem}
+.chamado .linha3{margin-top:.55rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
 
+/* o prazo é a única cor forte da interface */
+.prazo{font-size:.85rem;font-weight:600;padding:.1rem .5rem;border-radius:2rem;
+  border:1px solid currentColor;font-variant-numeric:tabular-nums}
+.prazo.folgado{color:var(--ok)}
+.prazo.apertado{color:var(--risco)}
+.prazo.vencido{color:var(--alerta)}
+.chamado.folgado{border-left-color:var(--ok)}
+.chamado.apertado{border-left-color:var(--risco)}
+.chamado.vencido{border-left-color:var(--alerta)}
+.chamado.neutro{border-left-color:var(--linha)}
+
+.estado{font-size:.85rem;color:var(--tinta-fraca);border:1px solid var(--linha);
+  border-radius:2rem;padding:.1rem .55rem}
+.pendencia{font-size:.85rem;color:var(--risco);font-weight:600}
+
+/* timeline */
+.linha-tempo{list-style:none;margin:0;padding:0;border-left:2px solid var(--linha);
+  margin-left:.4rem}
+.linha-tempo li{position:relative;padding:0 0 1.1rem 1.2rem}
+.linha-tempo li::before{content:"";position:absolute;left:-.42rem;top:.42rem;
+  width:.7rem;height:.7rem;border-radius:50%;background:var(--acao)}
+.linha-tempo li:last-child{padding-bottom:0}
+.linha-tempo .quando{font-size:.85rem;color:var(--tinta-fraca);
+  font-variant-numeric:tabular-nums}
+.linha-tempo .oque{font-weight:600}
+.linha-tempo .obs{font-size:.9rem;color:var(--tinta-fraca)}
+
+.par{display:grid;gap:1rem}
+@media (min-width:640px){.par{grid-template-columns:1fr 1fr}}
+.dado{margin-bottom:.7rem}
+.dado .rot{font-size:.85rem;color:var(--tinta-fraca)}
+.dado .val{font-weight:500}
+img.foto{max-width:100%;border:1px solid var(--linha);border-radius:var(--raio)}
+
+.vazio{text-align:center;padding:2.5rem 1rem;color:var(--tinta-fraca)}
+.nota-nova{border:1px dashed var(--linha);border-radius:var(--raio);padding:.9rem;
+  display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem}
+
+.escala{display:flex;gap:.4rem;flex-wrap:wrap}
+.escala button{flex:1;min-width:5.5rem;padding:.55rem .3rem;background:var(--campo);
+  border:1px solid var(--linha);border-radius:var(--raio);cursor:pointer;font-size:.9rem}
+.escala button[aria-pressed="true"]{background:var(--tinta);color:var(--papel);
+  border-color:var(--tinta)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -117,10 +145,9 @@ tr:last-child td{border-bottom:none}
 
 <!-- ===================================================================
      CONFIGURAÇÃO
-     A chave abaixo é a anon public. Ela é feita para ficar visível no
-     navegador. O que a torna segura é a RLS, testada na Fase 2: sem
-     usuário logado, ela não lê nenhuma linha de nenhuma tabela.
-     A chave service_role NUNCA entra neste arquivo.
+     A chave abaixo é a anon public: feita para ficar visível no
+     navegador. Quem a torna inofensiva é a RLS. A service_role nunca
+     entra neste arquivo.
 =================================================================== -->
 <script>
 const SUPABASE_URL  = "https://jdprmwoqqbiwtgvcuxrh.supabase.co";
@@ -138,43 +165,29 @@ const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
     <p class="rodape">Acesso restrito a servidores cadastrados e à empresa contratada.
        Para obter acesso, procure a PROAD.</p>
   </div>
-
   <div class="acesso">
     <div class="interno">
-
-      <!-- login -->
       <div id="telaLogin">
         <h2>Entrar</h2>
         <p class="dica">Use o e-mail institucional cadastrado pela PROAD.</p>
         <div id="avisoLogin"></div>
-        <div class="campo">
-          <label for="email">E-mail</label>
-          <input id="email" type="email" autocomplete="username" autofocus>
-        </div>
-        <div class="campo">
-          <label for="senha">Senha</label>
-          <input id="senha" type="password" autocomplete="current-password">
-        </div>
-        <button class="principal" id="btnEntrar">Entrar</button>
+        <div class="campo"><label for="email">E-mail</label>
+          <input id="email" type="email" autocomplete="username" autofocus></div>
+        <div class="campo"><label for="senha">Senha</label>
+          <input id="senha" type="password" autocomplete="current-password"></div>
+        <button class="principal larga" id="btnEntrar">Entrar</button>
       </div>
-
-      <!-- troca obrigatória -->
       <div id="telaTroca" style="display:none">
         <h2>Defina sua senha</h2>
         <p class="dica">Este é seu primeiro acesso. Escolha uma senha de pelo menos
            8 caracteres antes de continuar.</p>
         <div id="avisoTroca"></div>
-        <div class="campo">
-          <label for="nova1">Nova senha</label>
-          <input id="nova1" type="password" autocomplete="new-password">
-        </div>
-        <div class="campo">
-          <label for="nova2">Repita a nova senha</label>
-          <input id="nova2" type="password" autocomplete="new-password">
-        </div>
-        <button class="principal" id="btnTrocar">Salvar senha</button>
+        <div class="campo"><label for="nova1">Nova senha</label>
+          <input id="nova1" type="password" autocomplete="new-password"></div>
+        <div class="campo"><label for="nova2">Repita a nova senha</label>
+          <input id="nova2" type="password" autocomplete="new-password"></div>
+        <button class="principal larga" id="btnTrocar">Salvar senha</button>
       </div>
-
     </div>
   </div>
 </section>
@@ -183,183 +196,454 @@ const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 <div id="app">
   <header class="topo">
     <span class="nome" id="tNome"></span>
-    <span class="selo"  id="tPerfil"></span>
+    <span class="selo" id="tPerfil"></span>
     <span class="vinculo" id="tVinculo"></span>
     <span class="espaco"></span>
     <button id="btnSair">Sair</button>
   </header>
-
-  <main>
-    <div class="bloco">
-      <h3>Verificação de acesso</h3>
-      <p class="nota">Esta tela é provisória. Ela existe para conferir, pela conexão
-         real do navegador, que cada perfil enxerga apenas o que deve. Some quando as
-         telas de chamado entrarem.</p>
-      <table>
-        <thead><tr><th>Tabela</th><th class="num">Linhas visíveis</th><th class="num">Esperado</th><th>Resultado</th></tr></thead>
-        <tbody id="corpoDiag"><tr><td colspan="4">Consultando…</td></tr></tbody>
-      </table>
-    </div>
-
-    <div class="bloco">
-      <h3>Próximas telas</h3>
-      <p class="nota">Nada aqui ainda funciona. A ordem de construção é esta.</p>
-      <table>
-        <tbody>
-          <tr><td>Abrir chamado, acompanhar e validar</td><td>demandante</td></tr>
-          <tr><td>Receber, orçar e executar</td><td>empresa</td></tr>
-          <tr><td>Autorizar, controlar cota e emitir relatório</td><td>fiscalização</td></tr>
-          <tr><td>Parâmetros, feriados e tabela de preços</td><td>PROAD</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </main>
+  <main id="conteudo"></main>
 </div>
 
 <script>
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-const $ = id => document.getElementById(id);
+const $  = id => document.getElementById(id);
+let EU = null;              // perfil do usuário logado
+let CATEGORIAS = [], TIPOS = [], AMBIENTES = [], FRASES = [];
+
+/* ---------------- utilidades ---------------- */
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
 function recado(alvo, texto, tipo){
-  $(alvo).innerHTML = texto ? `<div class="recado ${tipo}">${texto}</div>` : "";
+  const el = $(alvo); if(!el) return;
+  el.innerHTML = texto ? `<div class="recado ${tipo}">${esc(texto)}</div>` : "";
 }
-
-/* O Supabase devolve mensagens em inglês. Traduzimos as que o usuário
-   realmente encontra, e dizemos o que fazer, não só o que falhou. */
 function traduzir(msg){
-  const m = (msg || "").toLowerCase();
-  if (m.includes("invalid login")) return "E-mail ou senha não conferem.";
-  if (m.includes("email not confirmed")) return "Cadastro ainda não confirmado. Procure a PROAD.";
-  if (m.includes("rate limit") || m.includes("too many"))
-    return "Muitas tentativas seguidas. Espere um minuto e tente de novo.";
-  if (m.includes("password should be")) return "A senha precisa ter pelo menos 8 caracteres.";
-  if (m.includes("failed to fetch"))
-    return "Sem conexão com o servidor. Verifique a internet e tente de novo.";
+  const m = (msg||"").toLowerCase();
+  if(m.includes("invalid login")) return "E-mail ou senha não conferem.";
+  if(m.includes("email not confirmed")) return "Cadastro ainda não confirmado. Procure a PROAD.";
+  if(m.includes("rate limit")||m.includes("too many")) return "Muitas tentativas seguidas. Espere um minuto.";
+  if(m.includes("password should be")) return "A senha precisa ter pelo menos 8 caracteres.";
+  if(m.includes("failed to fetch")) return "Sem conexão com o servidor. Verifique a internet.";
+  if(m.includes("row-level security")) return "Você não tem permissão para esta ação.";
+  if(m.includes("duplicate key")&&m.includes("sha256"))
+    return "Esta mesma foto já foi enviada em outro chamado. Tire uma foto nova do local.";
   return msg || "Não foi possível concluir.";
 }
+const NOME_PERFIL = {ADMIN:"Administração",GESTOR_CONTRATO:"Gestão do contrato",
+  FISCAL_ADM:"Fiscalização administrativa",FISCAL_TECNICO:"Fiscalização técnica",
+  FISCAL_SETORIAL:"Fiscalização setorial",DEMANDANTE:"Unidade demandante",
+  EMPRESA:"Empresa contratada"};
+const NOME_STATUS = {ABERTO:"Aberto",RECEBIDO:"Recebido pela empresa",
+  EM_ORCAMENTO:"Em orçamento",AGUARDANDO_AUTORIZACAO:"Aguardando autorização",
+  AUTORIZADO:"Autorizado",RECUSADO:"Recusado",BLOQUEADO_SEM_SALDO:"Barrado por falta de saldo",
+  EM_EXECUCAO:"Em execução",ATENDIDO:"Atendido, aguardando sua validação",
+  DEVOLVIDO:"Devolvido à empresa",EM_GARANTIA:"Em garantia",
+  REABERTO_GARANTIA:"Reaberto em garantia",CONCLUIDO:"Concluído"};
 
-const NOME_PERFIL = {
-  ADMIN:"Administração", GESTOR_CONTRATO:"Gestão do contrato",
-  FISCAL_ADM:"Fiscalização administrativa", FISCAL_TECNICO:"Fiscalização técnica",
-  FISCAL_SETORIAL:"Fiscalização setorial", DEMANDANTE:"Unidade demandante",
-  EMPRESA:"Empresa contratada"
-};
+const dataHora = s => s ? new Date(s).toLocaleString("pt-BR",
+  {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "—";
+const soData = s => s ? new Date(s+"T12:00:00").toLocaleDateString("pt-BR") : "—";
 
-/* Quantas linhas cada perfil deve enxergar. Números que a Fase 2 provou
-   no banco; aqui a mesma pergunta é feita por HTTP, que é o caminho real. */
-function esperado(perfil){
-  const global = ["ADMIN","GESTOR_CONTRATO","FISCAL_ADM","FISCAL_TECNICO"].includes(perfil);
-  return {
-    chamado:  global ? "todos" : perfil === "DEMANDANTE" ? "só da sua unidade"
-                     : perfil === "EMPRESA" ? "todos do contrato" : "só da sua alçada",
-    contrato: global ? "1" : "0",
-    cota_unidade: (global || perfil === "DEMANDANTE" || perfil === "FISCAL_SETORIAL")
-                  ? "conforme alçada" : "0",
-    usuario:  global ? "todos" : perfil === "DEMANDANTE" ? "os da sua unidade" : "1",
-    unidade:  "44"
-  };
+/* Estado do prazo. É a única coisa colorida da interface, porque é a
+   única informação em que a cor carrega significado. */
+function estadoPrazo(c){
+  const fim = ["CONCLUIDO","RECUSADO","EM_GARANTIA","ATENDIDO"].includes(c.status);
+  if(fim || !c.prazo_limite) return {classe:"neutro", texto:null};
+  const agora = Date.now(), limite = new Date(c.prazo_limite).getTime();
+  const inicio = new Date(c.aberto_em).getTime();
+  const restante = limite - agora;
+  if(restante <= 0) return {classe:"vencido", texto:"Prazo vencido"};
+  const consumido = (agora - inicio) / (limite - inicio);
+  const horas = Math.floor(restante/3600000);
+  const txt = horas < 24 ? `Faltam ${horas}h` : `Faltam ${Math.floor(horas/24)} dias`;
+  return {classe: consumido >= 0.7 ? "apertado" : "folgado", texto: txt};
 }
 
-async function contar(tabela){
-  const { count, error } = await sb.from(tabela).select("id", { count:"exact", head:true });
-  return error ? "erro" : count;
-}
-
-async function montarDiagnostico(perfil){
-  const alvo = esperado(perfil);
-  const linhas = [];
-  for (const t of ["chamado","unidade","contrato","cota_unidade","usuario"]){
-    const n = await contar(t);
-    const ok = (alvo[t] === "44" && n === 44) || (alvo[t] === "1" && n === 1)
-            || (alvo[t] === "0" && n === 0)  || !["44","1","0"].includes(alvo[t]);
-    linhas.push(`<tr>
-      <td>${t}</td>
-      <td class="num">${n}</td>
-      <td class="num">${alvo[t]}</td>
-      <td class="veredito ${ok?"ok":"nao"}">${ok?"confere":"conferir"}</td></tr>`);
+/* ---------------- imagem ---------------- */
+async function comprimir(file, ladoMax, kbMax){
+  const img = await new Promise((ok,err)=>{
+    const i = new Image(); i.onload=()=>ok(i); i.onerror=()=>err(new Error("imagem inválida"));
+    i.src = URL.createObjectURL(file);
+  });
+  let w = img.width, h = img.height;
+  const escala = Math.min(1, ladoMax/Math.max(w,h));
+  w = Math.round(w*escala); h = Math.round(h*escala);
+  const cv = document.createElement("canvas"); cv.width=w; cv.height=h;
+  cv.getContext("2d").drawImage(img,0,0,w,h);
+  URL.revokeObjectURL(img.src);
+  let q = 0.85, blob;
+  for(let i=0;i<9;i++){
+    blob = await new Promise(r=>cv.toBlob(r,"image/jpeg",q));
+    if(blob.size <= kbMax*1024) break;
+    q -= 0.09;
+    if(q < 0.2){ // encolhe também, senão a qualidade some antes do tamanho
+      cv.width = Math.round(cv.width*0.8); cv.height = Math.round(cv.height*0.8);
+      cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height); q = 0.7;
+    }
   }
-  $("corpoDiag").innerHTML = linhas.join("");
+  return blob;
+}
+async function sha256(blob){
+  const buf = await blob.arrayBuffer();
+  const h = await crypto.subtle.digest("SHA-256", buf);
+  return [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+async function enviarFoto(chamadoId, file, momento){
+  const original = await comprimir(file, 1600, 2048);
+  const derivada = await comprimir(file, 640, 50);
+  const hash = await sha256(original);
+  const carimbo = Date.now();
+  const po = `original/${chamadoId}/${momento.toLowerCase()}-${carimbo}.jpg`;
+  const pd = `derivada/${chamadoId}/${momento.toLowerCase()}-${carimbo}.jpg`;
+  let r = await sb.storage.from("chamado-foto").upload(po, original, {contentType:"image/jpeg"});
+  if(r.error) throw r.error;
+  r = await sb.storage.from("chamado-foto").upload(pd, derivada, {contentType:"image/jpeg"});
+  if(r.error) throw r.error;
+  const { error } = await sb.from("chamado_foto").insert({
+    chamado_id: chamadoId, momento, rodada: 1,
+    path_original: po, path_derivada: pd,
+    bytes_original: original.size, bytes_derivada: derivada.size,
+    sha256: hash, enviado_por: EU.id
+  });
+  if(error) throw error;
+}
+async function urlFoto(path){
+  const { data } = await sb.storage.from("chamado-foto").createSignedUrl(path, 300);
+  return data?.signedUrl || null;
 }
 
+/* ---------------- catálogos ---------------- */
+async function carregarCatalogos(){
+  const [c,t,a,f] = await Promise.all([
+    sb.from("categoria_servico").select("id,nome").eq("ativo",true).order("nome"),
+    sb.from("tipo_servico").select("id,nome,categoria_id").eq("ativo",true).order("nome"),
+    sb.from("tipo_ambiente").select("id,nome").eq("ativo",true).order("id"),
+    sb.from("frase_urgencia").select("id,frase,ordem_exibicao").eq("ativo",true).order("ordem_exibicao")
+  ]);
+  CATEGORIAS=c.data||[]; TIPOS=t.data||[]; AMBIENTES=a.data||[]; FRASES=f.data||[];
+}
+
+/* ---------------- lista do demandante ---------------- */
+async function telaLista(){
+  $("conteudo").innerHTML = `
+    <div class="barra">
+      <h2>Chamados da sua unidade</h2><span class="espaco"></span>
+      <button class="principal" id="btnNovo">Abrir chamado</button>
+    </div>
+    <div id="avisoLista"></div>
+    <div id="listaChamados"><p class="vazio">Carregando…</p></div>`;
+  $("btnNovo").onclick = telaNovo;
+
+  const { data, error } = await sb.from("v_chamado_demandante")
+    .select("*").order("aberto_em",{ascending:false});
+  if(error){ recado("avisoLista", traduzir(error.message), "erro"); return; }
+  if(!data.length){
+    $("listaChamados").innerHTML =
+      `<p class="vazio">Nenhum chamado aberto ainda.<br>
+       Use “Abrir chamado” para registrar o primeiro.</p>`;
+    return;
+  }
+  $("listaChamados").innerHTML = data.map(c=>{
+    const p = estadoPrazo(c);
+    const validar = c.status==="ATENDIDO";
+    return `<button class="chamado ${p.classe}" data-id="${c.id}">
+      <span class="linha1">
+        <span class="num">nº ${c.numero}</span>
+        <span class="tit">${esc(c.tipo_servico)}</span>
+      </span>
+      <span class="linha2">${esc(c.ambiente)} · ${esc(c.setor_especifico)}</span>
+      <span class="linha3">
+        <span class="estado">${esc(NOME_STATUS[c.status]||c.status)}</span>
+        ${p.texto?`<span class="prazo ${p.classe}">${p.texto}</span>`:""}
+        ${!c.tem_foto_antes?`<span class="pendencia">Foto do antes pendente</span>`:""}
+        ${validar?`<span class="pendencia">Aguarda sua validação</span>`:""}
+      </span></button>`;
+  }).join("");
+  document.querySelectorAll(".chamado").forEach(b=>
+    b.onclick = () => telaDetalhe(Number(b.dataset.id)));
+}
+
+/* ---------------- abrir chamado ---------------- */
+function telaNovo(){
+  $("conteudo").innerHTML = `
+    <div class="barra">
+      <button class="discreto" id="btnVoltar">Voltar</button>
+      <h2>Abrir chamado</h2>
+    </div>
+    <div id="avisoNovo"></div>
+    <div class="bloco">
+      <div class="par">
+        <div class="campo"><label class="obrig" for="fCat">Categoria</label>
+          <select id="fCat"><option value="">Escolha…</option>
+          ${CATEGORIAS.map(c=>`<option value="${c.id}">${esc(c.nome)}</option>`).join("")}
+          </select></div>
+        <div class="campo"><label class="obrig" for="fTipo">Tipo de serviço</label>
+          <select id="fTipo" disabled><option value="">Escolha a categoria antes</option></select></div>
+        <div class="campo"><label class="obrig" for="fAmb">Tipo de ambiente</label>
+          <select id="fAmb"><option value="">Escolha…</option>
+          ${AMBIENTES.map(a=>`<option value="${a.id}">${esc(a.nome)}</option>`).join("")}
+          </select></div>
+        <div class="campo"><label class="obrig" for="fSetor">Local exato</label>
+          <input id="fSetor" maxlength="120" placeholder="Sala E5, bloco E">
+          <p class="ajuda">Onde alguém que não conhece o prédio conseguiria chegar.</p></div>
+      </div>
+      <div class="campo"><label class="obrig" for="fDesc">O que está acontecendo</label>
+        <textarea id="fDesc" maxlength="1000" placeholder="Duas lâmpadas queimadas sobre a mesa do professor."></textarea></div>
+      <div class="campo"><label class="obrig" for="fFrase">Como isso afeta o uso do ambiente</label>
+        <select id="fFrase"><option value="">Escolha…</option>
+        ${FRASES.map(f=>`<option value="${f.id}">${esc(f.frase)}</option>`).join("")}
+        </select>
+        <p class="ajuda">Escolha a frase que descreve a situação real. Ela define o prazo de atendimento.</p></div>
+      <div class="campo" id="boxData" style="display:none">
+        <label class="obrig" for="fData">Data esperada</label>
+        <input id="fData" type="date">
+        <p class="ajuda">Precisa ser pelo menos três dias úteis à frente.</p></div>
+      <div class="campo"><label class="obrig" for="fFoto">Foto do problema</label>
+        <input id="fFoto" type="file" accept="image/*" capture="environment">
+        <p class="ajuda">Serve como registro do antes. A foto é reduzida automaticamente antes de subir.</p></div>
+      <button class="principal" id="btnSalvar">Abrir chamado</button>
+    </div>`;
+  $("btnVoltar").onclick = telaLista;
+
+  $("fCat").onchange = () => {
+    const cat = Number($("fCat").value);
+    const lista = TIPOS.filter(t=>t.categoria_id===cat);
+    $("fTipo").disabled = !lista.length;
+    $("fTipo").innerHTML = `<option value="">Escolha…</option>` +
+      lista.map(t=>`<option value="${t.id}">${esc(t.nome)}</option>`).join("");
+  };
+  /* As frases de programação exigem data. Descobrimos pelo texto, porque
+     o nível de urgência não é visível para este perfil — de propósito. */
+  $("fFrase").onchange = () => {
+    const txt = $("fFrase").selectedOptions[0]?.text.toLowerCase() || "";
+    const programado = txt.includes("programad") || txt.includes("aparência");
+    $("boxData").style.display = programado ? "block" : "none";
+  };
+  $("btnSalvar").onclick = salvarChamado;
+}
+
+async function salvarChamado(){
+  recado("avisoNovo","");
+  const b = $("btnSalvar");
+  const dados = {
+    unidade_id: EU.unidade_id, aberto_por: EU.id,
+    tipo_servico_id: Number($("fTipo").value)||null,
+    tipo_ambiente_id: Number($("fAmb").value)||null,
+    setor_especifico: $("fSetor").value.trim(),
+    descricao: $("fDesc").value.trim(),
+    frase_urgencia_id: Number($("fFrase").value)||null,
+    data_esperada: $("boxData").style.display==="block" ? ($("fData").value||null) : null,
+    nivel_codigo: "NORMAL",   // o gatilho do banco sobrescreve pela frase
+    status: "ABERTO"
+  };
+  const arquivo = $("fFoto").files[0];
+  if(!dados.tipo_servico_id) return recado("avisoNovo","Escolha a categoria e o tipo de serviço.","erro");
+  if(!dados.tipo_ambiente_id) return recado("avisoNovo","Escolha o tipo de ambiente.","erro");
+  if(dados.setor_especifico.length < 3) return recado("avisoNovo","Diga onde é, com pelo menos 3 letras.","erro");
+  if(dados.descricao.length < 10) return recado("avisoNovo","Descreva o problema com um pouco mais de detalhe.","erro");
+  if(!dados.frase_urgencia_id) return recado("avisoNovo","Escolha como isso afeta o uso do ambiente.","erro");
+  if(!arquivo) return recado("avisoNovo","A foto do problema é obrigatória.","erro");
+
+  b.disabled = true; b.textContent = "Abrindo…";
+  const { data, error } = await sb.from("chamado").insert(dados).select("id,numero").single();
+  if(error){ b.disabled=false; b.textContent="Abrir chamado";
+             return recado("avisoNovo", traduzir(error.message), "erro"); }
+  try{
+    b.textContent = "Enviando foto…";
+    await enviarFoto(data.id, arquivo, "ANTES");
+  }catch(e){
+    b.disabled=false; b.textContent="Abrir chamado";
+    return recado("avisoNovo",
+      `Chamado nº ${data.numero} foi criado, mas a foto não subiu: ${traduzir(e.message)} `+
+      `Abra o chamado na lista e envie a foto — a empresa só recebe depois disso.`, "atencao");
+  }
+  await telaLista();
+  recado("avisoLista", `Chamado nº ${data.numero} aberto. A empresa foi notificada.`, "bom");
+}
+
+/* ---------------- detalhe ---------------- */
+async function telaDetalhe(id){
+  $("conteudo").innerHTML = `<div class="barra">
+      <button class="discreto" id="btnVoltar">Voltar</button><h2>Chamado</h2></div>
+    <div id="avisoDet"></div><div id="corpoDet"><p class="vazio">Carregando…</p></div>`;
+  $("btnVoltar").onclick = telaLista;
+
+  const [{data:c, error:e1}, {data:tl}, {data:fotos}] = await Promise.all([
+    sb.from("v_chamado_demandante").select("*").eq("id",id).single(),
+    sb.from("v_timeline").select("*").eq("chamado_id",id).order("criado_em"),
+    sb.from("chamado_foto").select("*").eq("chamado_id",id).order("enviado_em")
+  ]);
+  if(e1||!c){ recado("avisoDet","Chamado não encontrado.","erro"); return; }
+
+  const p = estadoPrazo(c);
+  const imgs = [];
+  for(const f of (fotos||[])){
+    const u = await urlFoto(f.path_derivada);
+    if(u) imgs.push(`<div><p class="rot">${f.momento==="ANTES"?"Antes":"Depois"} · ${dataHora(f.enviado_em)}</p>
+                     <img class="foto" src="${u}" alt="Registro do ${f.momento==="ANTES"?"problema":"serviço concluído"}"></div>`);
+  }
+
+  $("corpoDet").innerHTML = `
+    <div class="bloco">
+      <div class="barra"><h3>nº ${c.numero} · ${esc(c.tipo_servico)}</h3>
+        <span class="espaco"></span>
+        <span class="estado">${esc(NOME_STATUS[c.status]||c.status)}</span>
+        ${p.texto?`<span class="prazo ${p.classe}">${p.texto}</span>`:""}</div>
+      <div class="par">
+        <div>
+          <div class="dado"><p class="rot">Categoria</p><p class="val">${esc(c.categoria)}</p></div>
+          <div class="dado"><p class="rot">Ambiente</p><p class="val">${esc(c.ambiente)}</p></div>
+          <div class="dado"><p class="rot">Local exato</p><p class="val">${esc(c.setor_especifico)}</p></div>
+        </div>
+        <div>
+          <div class="dado"><p class="rot">Aberto em</p><p class="val">${dataHora(c.aberto_em)}</p></div>
+          <div class="dado"><p class="rot">Prazo de atendimento</p><p class="val">${dataHora(c.prazo_limite)}</p></div>
+          ${c.garantia_ate?`<div class="dado"><p class="rot">Garantia até</p><p class="val">${soData(c.garantia_ate)}</p></div>`:""}
+        </div>
+      </div>
+      <div class="dado"><p class="rot">Descrição</p><p class="val">${esc(c.descricao)}</p></div>
+      <div class="dado"><p class="rot">Situação informada na abertura</p>
+        <p class="val">${esc(c.situacao_informada)}</p></div>
+    </div>
+
+    ${!c.tem_foto_antes ? `<div class="bloco">
+      <h3>Foto do antes pendente</h3>
+      <p class="nota">A empresa não recebe este chamado enquanto a foto não for enviada.</p>
+      <div class="campo"><input id="fotoTardia" type="file" accept="image/*" capture="environment"></div>
+      <button class="principal" id="btnFotoTardia">Enviar foto</button></div>` : ""}
+
+    ${imgs.length?`<div class="bloco"><h3>Registro fotográfico</h3>
+      <div class="par">${imgs.join("")}</div></div>`:""}
+
+    ${c.status==="ATENDIDO"?`<div class="bloco">
+      <h3>Validar o serviço</h3>
+      <p class="nota">Confira no local antes de validar. Sem manifestação em 5 dias,
+         o sistema homologa como atendido com nota boa.</p>
+      <div class="campo"><label>Qualidade do serviço</label>
+        <div class="escala" id="escalaNota">
+          ${[[1,"Péssimo"],[2,"Ruim"],[3,"Regular"],[4,"Bom"],[5,"Excelente"]]
+            .map(([n,r])=>`<button data-n="${n}" aria-pressed="false">${r}</button>`).join("")}
+        </div></div>
+      <div class="campo"><label for="fOcor">Observações</label>
+        <textarea id="fOcor" maxlength="1000" placeholder="O que ficou bom, o que ficou faltando."></textarea></div>
+      <div class="barra">
+        <button class="principal" id="btnAceitar">Aceitar o serviço</button>
+        <button class="discreto" id="btnDevolver">Não foi resolvido, devolver</button></div>
+      </div>`:""}
+
+    <div class="bloco"><h3>Andamento</h3>
+      <ul class="linha-tempo">
+        ${(tl||[]).map(t=>`<li>
+          <p class="quando">${dataHora(t.criado_em)} · ${esc(t.responsavel)}</p>
+          <p class="oque">${esc(NOME_STATUS[t.status_novo]||t.status_novo)}</p>
+          ${t.observacao?`<p class="obs">${esc(t.observacao)}</p>`:""}</li>`).join("")}
+      </ul></div>`;
+
+  if($("btnFotoTardia")) $("btnFotoTardia").onclick = async () => {
+    const f = $("fotoTardia").files[0];
+    if(!f) return recado("avisoDet","Escolha uma foto.","erro");
+    const b = $("btnFotoTardia"); b.disabled=true; b.textContent="Enviando…";
+    try{ await enviarFoto(id, f, "ANTES"); await telaDetalhe(id); }
+    catch(e){ b.disabled=false; b.textContent="Enviar foto";
+              recado("avisoDet", traduzir(e.message), "erro"); }
+  };
+
+  let nota = null;
+  document.querySelectorAll("#escalaNota button").forEach(bt=>{
+    bt.onclick = () => {
+      nota = Number(bt.dataset.n);
+      document.querySelectorAll("#escalaNota button")
+        .forEach(x=>x.setAttribute("aria-pressed", x===bt ? "true":"false"));
+    };
+  });
+  async function validar(atendida){
+    if(!nota) return recado("avisoDet","Escolha a qualidade do serviço.","erro");
+    if(!atendida && $("fOcor").value.trim().length < 10)
+      return recado("avisoDet","Diga o que continua errado, para a empresa saber o que refazer.","erro");
+    const { error } = await sb.rpc("validar_chamado", {
+      p_chamado:id, p_nota:nota, p_atendida:atendida,
+      p_ocorrencias: $("fOcor").value.trim() || null });
+    if(error) return recado("avisoDet", traduzir(error.message), "erro");
+    await telaLista();
+    recado("avisoLista", atendida ? "Serviço aceito. O chamado entrou em garantia."
+                                  : "Chamado devolvido à empresa.", "bom");
+  }
+  if($("btnAceitar"))  $("btnAceitar").onclick  = () => validar(true);
+  if($("btnDevolver")) $("btnDevolver").onclick = () => validar(false);
+}
+
+/* ---------------- provisório para os demais perfis ---------------- */
+function telaPendente(){
+  $("conteudo").innerHTML = `<div class="bloco">
+    <h3>Tela ainda não construída</h3>
+    <p class="nota">Seu acesso funciona e suas permissões estão ativas, mas a tela
+      deste perfil entra nas próximas partes.</p>
+    <table><tbody>
+      <tr><td>Receber, orçar e executar</td><td>empresa</td></tr>
+      <tr><td>Autorizar, controlar cota e emitir relatório</td><td>fiscalização</td></tr>
+      <tr><td>Parâmetros, feriados e tabela de preços</td><td>PROAD</td></tr>
+    </tbody></table></div>`;
+}
+
+/* ---------------- entrada e roteamento ---------------- */
 async function abrirApp(p){
-  $("entrada").style.display = "none";
-  $("app").style.display = "flex";
-  $("tNome").textContent   = p.nome_completo;
-  $("tPerfil").textContent = NOME_PERFIL[p.perfil] || p.perfil;
+  EU = p;
+  $("entrada").style.display="none";
+  $("app").style.display="flex";
+  $("tNome").textContent = p.nome_completo;
+  $("tPerfil").textContent = NOME_PERFIL[p.perfil]||p.perfil;
   $("tVinculo").textContent = p.unidade_nome
-      ? p.unidade_nome + (p.predio_nome ? " · " + p.predio_nome : "")
-      : (p.empresa_nome || "");
-  await montarDiagnostico(p.perfil);
+    ? p.unidade_nome + (p.predio_nome ? " · "+p.predio_nome : "")
+    : (p.empresa_nome||"");
+  if(p.perfil==="DEMANDANTE"){ await carregarCatalogos(); await telaLista(); }
+  else telaPendente();
 }
-
 async function carregarPerfil(){
   const { data:{ user } } = await sb.auth.getUser();
-  if (!user) return null;
-  const { data, error } = await sb.from("v_meu_perfil").select("*").eq("id", user.id).single();
-  if (error || !data) return null;
-  return data;
+  if(!user) return null;
+  const { data } = await sb.from("v_meu_perfil").select("*").eq("id",user.id).single();
+  return data||null;
 }
-
 async function seguir(){
   const p = await carregarPerfil();
-  if (!p){
-    recado("avisoLogin","Seu login funcionou, mas você ainda não tem perfil cadastrado no sistema. Procure a PROAD.","erro");
-    await sb.auth.signOut();
-    return;
-  }
-  if (!p.ativo){
-    recado("avisoLogin","Seu acesso está desativado. Procure a PROAD.","erro");
-    await sb.auth.signOut();
-    return;
-  }
-  if (p.precisa_trocar_senha){
-    $("telaLogin").style.display = "none";
-    $("telaTroca").style.display = "block";
-    $("nova1").focus();
-    return;
+  if(!p){ recado("avisoLogin","Seu login funcionou, mas você ainda não tem perfil cadastrado. Procure a PROAD.","erro");
+          await sb.auth.signOut(); return; }
+  if(!p.ativo){ recado("avisoLogin","Seu acesso está desativado. Procure a PROAD.","erro");
+                await sb.auth.signOut(); return; }
+  if(p.precisa_trocar_senha){
+    $("telaLogin").style.display="none"; $("telaTroca").style.display="block";
+    $("nova1").focus(); return;
   }
   await abrirApp(p);
 }
-
 $("btnEntrar").onclick = async () => {
   recado("avisoLogin","");
-  const b = $("btnEntrar"); b.disabled = true; b.textContent = "Entrando…";
+  const b=$("btnEntrar"); b.disabled=true; b.textContent="Entrando…";
   const { error } = await sb.auth.signInWithPassword({
-    email: $("email").value.trim(), password: $("senha").value
-  });
-  b.disabled = false; b.textContent = "Entrar";
-  if (error){ recado("avisoLogin", traduzir(error.message), "erro"); return; }
+    email:$("email").value.trim(), password:$("senha").value });
+  b.disabled=false; b.textContent="Entrar";
+  if(error) return recado("avisoLogin", traduzir(error.message), "erro");
   await seguir();
 };
-
-$("senha").addEventListener("keydown", e => { if (e.key === "Enter") $("btnEntrar").click(); });
-
+$("senha").addEventListener("keydown", e=>{ if(e.key==="Enter") $("btnEntrar").click(); });
 $("btnTrocar").onclick = async () => {
   recado("avisoTroca","");
-  const a = $("nova1").value, b = $("nova2").value;
-  if (a.length < 8) return recado("avisoTroca","A senha precisa ter pelo menos 8 caracteres.","erro");
-  if (a !== b)      return recado("avisoTroca","As duas senhas não são iguais.","erro");
-  const bt = $("btnTrocar"); bt.disabled = true; bt.textContent = "Salvando…";
-  const { error } = await sb.auth.updateUser({ password: a });
-  if (error){ bt.disabled=false; bt.textContent="Salvar senha";
-              return recado("avisoTroca", traduzir(error.message), "erro"); }
-  const { error: e2 } = await sb.rpc("marcar_senha_trocada");
-  bt.disabled = false; bt.textContent = "Salvar senha";
-  if (e2) return recado("avisoTroca", traduzir(e2.message), "erro");
-  const p = await carregarPerfil();
-  $("telaTroca").style.display = "none";
-  $("telaLogin").style.display = "block";
-  await abrirApp(p);
+  const a=$("nova1").value, b2=$("nova2").value;
+  if(a.length<8) return recado("avisoTroca","A senha precisa ter pelo menos 8 caracteres.","erro");
+  if(a!==b2)     return recado("avisoTroca","As duas senhas não são iguais.","erro");
+  const bt=$("btnTrocar"); bt.disabled=true; bt.textContent="Salvando…";
+  const { error } = await sb.auth.updateUser({ password:a });
+  if(error){ bt.disabled=false; bt.textContent="Salvar senha";
+             return recado("avisoTroca", traduzir(error.message), "erro"); }
+  const { error:e2 } = await sb.rpc("marcar_senha_trocada");
+  bt.disabled=false; bt.textContent="Salvar senha";
+  if(e2) return recado("avisoTroca", traduzir(e2.message), "erro");
+  $("telaTroca").style.display="none"; $("telaLogin").style.display="block";
+  await abrirApp(await carregarPerfil());
 };
-
 $("btnSair").onclick = async () => { await sb.auth.signOut(); location.reload(); };
-
-/* Sessão já aberta: entra direto. */
-(async () => {
-  const { data:{ session } } = await sb.auth.getSession();
-  if (session) await seguir();
-})();
+(async()=>{ const { data:{session} } = await sb.auth.getSession(); if(session) await seguir(); })();
 </script>
 </body>
 </html>
-
