@@ -6,93 +6,78 @@
 <title>Manutenção Predial — UERN</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{
-  --tinta:#10242B; --tinta-fraca:#4A6068; --papel:#F2F4F3; --campo:#FFFFFF;
-  --linha:#C9D2D4; --acao:#1F5D6B; --acao-escura:#164752;
-  --alerta:#9E3520; --risco:#8A6410; --ok:#2F6B4F; --raio:3px;
-}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
+:root{--tinta:#10242B;--tinta-fraca:#4A6068;--papel:#F2F4F3;--campo:#FFFFFF;
+ --linha:#C9D2D4;--acao:#1F5D6B;--acao-escura:#164752;
+ --alerta:#9E3520;--risco:#8A6410;--ok:#2F6B4F;--raio:3px}
+*{box-sizing:border-box} html,body{margin:0;padding:0}
 body{background:var(--papel);color:var(--tinta);
-  font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
-  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
-h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.01em}
-p{margin:0}
+ font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+ font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.01em} p{margin:0}
 button,input,select,textarea{font:inherit;color:inherit}
-
 #entrada{min-height:100vh;display:grid;grid-template-columns:1fr}
 @media (min-width:900px){#entrada{grid-template-columns:5fr 4fr}}
 .marca{background:var(--tinta);color:var(--papel);padding:2.5rem 2rem;
-  display:flex;flex-direction:column;justify-content:space-between}
+ display:flex;flex-direction:column;justify-content:space-between}
 .marca h1{font-size:clamp(1.75rem,4vw,2.6rem);line-height:1.1;max-width:14ch}
 .marca .sub{margin-top:1rem;color:#A9C0C6;max-width:42ch}
 .marca .rodape{margin-top:2.5rem;font-size:.85rem;color:#7F9AA1;
-  border-top:1px solid #24414A;padding-top:1rem}
+ border-top:1px solid #24414A;padding-top:1rem}
 .acesso{padding:2.5rem 2rem;display:flex;align-items:center}
 .acesso .interno{width:100%;max-width:24rem;margin:0 auto}
 .acesso h2{font-size:1.15rem;margin-bottom:.35rem}
 .acesso .dica{color:var(--tinta-fraca);font-size:.9rem;margin-bottom:1.75rem}
-
 label{display:block;font-size:.9rem;margin-bottom:.35rem}
 .obrig::after{content:" (obrigatório)";color:var(--tinta-fraca);font-size:.82rem}
 input,select,textarea{width:100%;padding:.65rem .75rem;background:var(--campo);
-  border:1px solid var(--linha);border-radius:var(--raio)}
+ border:1px solid var(--linha);border-radius:var(--raio)}
 textarea{min-height:5.5rem;resize:vertical}
 input:focus-visible,select:focus-visible,textarea:focus-visible{
-  outline:2px solid var(--acao);outline-offset:1px;border-color:var(--acao)}
+ outline:2px solid var(--acao);outline-offset:1px;border-color:var(--acao)}
 .campo{margin-bottom:1.1rem}
 .ajuda{font-size:.85rem;color:var(--tinta-fraca);margin-top:.3rem}
-
 button.principal{padding:.7rem 1.1rem;background:var(--acao);color:#fff;
-  border:1px solid var(--acao);border-radius:var(--raio);cursor:pointer;font-weight:500}
+ border:1px solid var(--acao);border-radius:var(--raio);cursor:pointer;font-weight:500}
 button.principal.larga{width:100%}
 button.principal:hover{background:var(--acao-escura);border-color:var(--acao-escura)}
 button.principal:disabled{opacity:.55;cursor:progress}
 button.principal:focus-visible{outline:2px solid var(--tinta);outline-offset:2px}
 button.discreto{background:none;border:1px solid var(--linha);border-radius:var(--raio);
-  padding:.45rem .9rem;cursor:pointer;color:var(--tinta)}
+ padding:.45rem .9rem;cursor:pointer;color:var(--tinta)}
 button.discreto:hover{border-color:var(--tinta-fraca)}
 button.risco{border-color:#DFC0B7;color:var(--alerta)}
-
 .recado{padding:.7rem .8rem;border-radius:var(--raio);font-size:.9rem;margin-bottom:1.1rem}
 .recado.erro{background:#F6E4E0;color:var(--alerta);border:1px solid #E2BDB4}
 .recado.bom{background:#E2EFE8;color:var(--ok);border:1px solid #B9D6C6}
 .recado.atencao{background:#F5EEDC;color:var(--risco);border:1px solid #DFCFA6}
-
 #app{display:none;min-height:100vh;flex-direction:column}
 .topo{background:var(--tinta);color:var(--papel);padding:.85rem 1.25rem;
-  display:flex;gap:.9rem;align-items:center;flex-wrap:wrap}
-.topo .nome{font-weight:600}
-.topo .vinculo{color:#A9C0C6;font-size:.9rem}
+ display:flex;gap:.9rem;align-items:center;flex-wrap:wrap}
+.topo .nome{font-weight:600} .topo .vinculo{color:#A9C0C6;font-size:.9rem}
 .topo .espaco{flex:1}
 .topo button{background:none;border:1px solid #35525B;color:var(--papel);
-  border-radius:var(--raio);padding:.35rem .8rem;cursor:pointer}
+ border-radius:var(--raio);padding:.35rem .8rem;cursor:pointer}
 .topo button:hover{border-color:#6E8B93}
 .selo{display:inline-block;border:1px solid #35525B;border-radius:2rem;
-  padding:.1rem .6rem;font-size:.8rem;color:#C6DADF}
-
-main{padding:1.5rem 1.25rem;max-width:60rem;width:100%;margin:0 auto}
+ padding:.1rem .6rem;font-size:.8rem;color:#C6DADF}
+main{padding:1.5rem 1.25rem;max-width:62rem;width:100%;margin:0 auto}
 .barra{display:flex;gap:.6rem;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap}
-.barra h2{font-size:1.25rem}
-.barra .espaco{flex:1}
+.barra h2{font-size:1.25rem} .barra .espaco{flex:1}
 .bloco{background:var(--campo);border:1px solid var(--linha);
-  border-radius:var(--raio);padding:1.25rem;margin-bottom:1rem}
+ border-radius:var(--raio);padding:1.25rem;margin-bottom:1rem}
 .bloco h3{font-size:1rem;margin-bottom:.25rem}
 .bloco .nota{color:var(--tinta-fraca);font-size:.9rem;margin-bottom:1rem}
-
-/* abas por prédio */
 .abas{display:flex;gap:.3rem;flex-wrap:wrap;border-bottom:1px solid var(--linha);
-  margin-bottom:1rem;padding-bottom:.5rem}
+ margin-bottom:1rem;padding-bottom:.5rem}
 .abas button{background:none;border:1px solid transparent;border-radius:var(--raio);
-  padding:.35rem .7rem;cursor:pointer;font-size:.92rem;color:var(--tinta-fraca)}
+ padding:.35rem .7rem;cursor:pointer;font-size:.92rem;color:var(--tinta-fraca)}
 .abas button:hover{border-color:var(--linha)}
 .abas button[aria-selected="true"]{background:var(--tinta);color:var(--papel);
-  border-color:var(--tinta);font-weight:500}
+ border-color:var(--tinta);font-weight:500}
 .abas .contagem{font-variant-numeric:tabular-nums;opacity:.75;margin-left:.3rem}
-
 .chamado{background:var(--campo);border:1px solid var(--linha);border-radius:var(--raio);
-  padding:1rem 1.1rem;margin-bottom:.7rem;cursor:pointer;display:block;width:100%;
-  text-align:left;border-left-width:4px}
+ padding:1rem 1.1rem;margin-bottom:.7rem;cursor:pointer;display:block;width:100%;
+ text-align:left;border-left-width:4px}
 .chamado:hover{border-color:var(--tinta-fraca)}
 .chamado:focus-visible{outline:2px solid var(--acao);outline-offset:2px}
 .chamado .linha1{display:flex;gap:.6rem;align-items:baseline;flex-wrap:wrap}
@@ -100,9 +85,8 @@ main{padding:1.5rem 1.25rem;max-width:60rem;width:100%;margin:0 auto}
 .chamado .tit{font-weight:600}
 .chamado .linha2{color:var(--tinta-fraca);font-size:.9rem;margin-top:.2rem}
 .chamado .linha3{margin-top:.55rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
-
 .prazo{font-size:.85rem;font-weight:600;padding:.1rem .5rem;border-radius:2rem;
-  border:1px solid currentColor;font-variant-numeric:tabular-nums}
+ border:1px solid currentColor;font-variant-numeric:tabular-nums}
 .prazo.folgado{color:var(--ok)} .prazo.apertado{color:var(--risco)}
 .prazo.vencido{color:var(--alerta)}
 .chamado.folgado{border-left-color:var(--ok)}
@@ -110,51 +94,50 @@ main{padding:1.5rem 1.25rem;max-width:60rem;width:100%;margin:0 auto}
 .chamado.vencido{border-left-color:var(--alerta)}
 .chamado.neutro{border-left-color:var(--linha)}
 .estado{font-size:.85rem;color:var(--tinta-fraca);border:1px solid var(--linha);
-  border-radius:2rem;padding:.1rem .55rem}
+ border-radius:2rem;padding:.1rem .55rem}
 .nivel{font-size:.85rem;font-weight:600;border-radius:2rem;padding:.1rem .55rem;
-  border:1px solid currentColor}
+ border:1px solid currentColor}
 .nivel.critico{color:var(--alerta)} .nivel.alto{color:var(--risco)}
 .nivel.comum{color:var(--tinta-fraca)}
 .pendencia{font-size:.85rem;color:var(--risco);font-weight:600}
-
+.valor{font-size:.85rem;font-variant-numeric:tabular-nums;color:var(--tinta-fraca)}
 .linha-tempo{list-style:none;margin:0;padding:0;border-left:2px solid var(--linha);margin-left:.4rem}
 .linha-tempo li{position:relative;padding:0 0 1.1rem 1.2rem}
 .linha-tempo li::before{content:"";position:absolute;left:-.42rem;top:.42rem;
-  width:.7rem;height:.7rem;border-radius:50%;background:var(--acao)}
+ width:.7rem;height:.7rem;border-radius:50%;background:var(--acao)}
 .linha-tempo li:last-child{padding-bottom:0}
 .linha-tempo .quando{font-size:.85rem;color:var(--tinta-fraca);font-variant-numeric:tabular-nums}
 .linha-tempo .oque{font-weight:600}
 .linha-tempo .obs{font-size:.9rem;color:var(--tinta-fraca)}
-
 .par{display:grid;gap:1rem}
 @media (min-width:640px){.par{grid-template-columns:1fr 1fr}}
+.tres{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr))}
 .dado{margin-bottom:.7rem}
 .dado .rot{font-size:.85rem;color:var(--tinta-fraca)}
 .dado .val{font-weight:500}
+.cifra{font-size:1.35rem;font-weight:600;font-variant-numeric:tabular-nums}
 img.foto{max-width:100%;border:1px solid var(--linha);border-radius:var(--raio)}
 .vazio{text-align:center;padding:2.5rem 1rem;color:var(--tinta-fraca)}
-
 table{width:100%;border-collapse:collapse;font-size:.93rem}
 th,td{text-align:left;padding:.5rem .4rem;border-bottom:1px solid var(--linha)}
 th{font-weight:600;color:var(--tinta-fraca);font-size:.85rem}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 tr:last-child td{border-bottom:none}
 tfoot td{font-weight:600;border-top:2px solid var(--linha);border-bottom:none}
-
+.rolagem{overflow-x:auto}
 .grade-insumo{display:grid;gap:.6rem;grid-template-columns:1fr;margin-bottom:.8rem}
 @media (min-width:760px){.grade-insumo{grid-template-columns:1fr 2.4fr .8fr 1fr 1fr auto}}
 .grade-insumo .campo{margin:0}
 .escala{display:flex;gap:.4rem;flex-wrap:wrap}
 .escala button{flex:1;min-width:5.5rem;padding:.55rem .3rem;background:var(--campo);
-  border:1px solid var(--linha);border-radius:var(--raio);cursor:pointer;font-size:.9rem}
+ border:1px solid var(--linha);border-radius:var(--raio);cursor:pointer;font-size:.9rem}
 .escala button[aria-pressed="true"]{background:var(--tinta);color:var(--papel);border-color:var(--tinta)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 
-<!-- Chave anon public: feita para ficar visível. Quem a torna inofensiva
-     é a RLS. A service_role nunca entra neste arquivo. -->
+<!-- Chave anon public: feita para ficar visível. Quem a torna inofensiva é a RLS. -->
 <script>
 const SUPABASE_URL  = "https://jdprmwoqqbiwtgvcuxrh.supabase.co";
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkcHJtd29xcWJpd3RndmN1eHJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1Njk5NzMsImV4cCI6MjEwNDE0NTk3M30.yKFSBsXjLxAPCfokEv6XIyEYyVW2GrqlJlaqCpOOWXA";
@@ -163,10 +146,10 @@ const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 <section id="entrada">
   <div class="marca">
     <div><h1>Manutenção predial da UERN</h1>
-      <p class="sub">Abertura e acompanhamento de chamados de manutenção nas
-         unidades da universidade, com prazo, orçamento e histórico de cada serviço.</p></div>
+      <p class="sub">Abertura e acompanhamento de chamados de manutenção nas unidades
+        da universidade, com prazo, orçamento e histórico de cada serviço.</p></div>
     <p class="rodape">Acesso restrito a servidores cadastrados e à empresa contratada.
-       Para obter acesso, procure a PROAD.</p>
+      Para obter acesso, procure a PROAD.</p>
   </div>
   <div class="acesso"><div class="interno">
     <div id="telaLogin">
@@ -194,10 +177,8 @@ const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 
 <div id="app">
   <header class="topo">
-    <span class="nome" id="tNome"></span>
-    <span class="selo" id="tPerfil"></span>
-    <span class="vinculo" id="tVinculo"></span>
-    <span class="espaco"></span>
+    <span class="nome" id="tNome"></span><span class="selo" id="tPerfil"></span>
+    <span class="vinculo" id="tVinculo"></span><span class="espaco"></span>
     <button id="btnSair">Sair</button>
   </header>
   <main id="conteudo"></main>
@@ -205,645 +186,680 @@ const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 
 <script>
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-const $  = id => document.getElementById(id);
+const $ = id => document.getElementById(id);
 let EU=null, CATEGORIAS=[], TIPOS=[], AMBIENTES=[], FRASES=[];
 let PREDIOS=[], FUNCIONARIOS=[], TABELAS=[];
-let ABA="TODOS", ORDEM="urgencia";
+let ABA="TODOS", ORDEM="urgencia", ABA_FISC="decisoes";
 
-const esc = s => String(s ?? "").replace(/[&<>"']/g,c=>
-  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function recado(alvo,texto,tipo){const el=$(alvo); if(!el)return;
-  el.innerHTML = texto?`<div class="recado ${tipo}">${esc(texto)}</div>`:"";}
-function traduzir(msg){
-  const m=(msg||"").toLowerCase();
-  if(m.includes("invalid login")) return "E-mail ou senha não conferem.";
-  if(m.includes("email not confirmed")) return "Cadastro ainda não confirmado. Procure a PROAD.";
-  if(m.includes("rate limit")||m.includes("too many")) return "Muitas tentativas seguidas. Espere um minuto.";
-  if(m.includes("password should be")) return "A senha precisa ter pelo menos 8 caracteres.";
-  if(m.includes("failed to fetch")) return "Sem conexão com o servidor. Verifique a internet.";
-  if(m.includes("row-level security")) return "Você não tem permissão para esta ação.";
-  if(m.includes("duplicate key")&&m.includes("sha256"))
-    return "Esta mesma foto já foi enviada em outro chamado. Tire uma foto nova do local.";
-  return msg||"Não foi possível concluir.";
-}
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>
+ ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function recado(a,t,tp){const el=$(a); if(el) el.innerHTML=t?`<div class="recado ${tp}">${esc(t)}</div>`:"";}
+function traduzir(msg){const m=(msg||"").toLowerCase();
+ if(m.includes("invalid login"))return "E-mail ou senha não conferem.";
+ if(m.includes("email not confirmed"))return "Cadastro ainda não confirmado. Procure a PROAD.";
+ if(m.includes("rate limit")||m.includes("too many"))return "Muitas tentativas seguidas. Espere um minuto.";
+ if(m.includes("password should be"))return "A senha precisa ter pelo menos 8 caracteres.";
+ if(m.includes("failed to fetch"))return "Sem conexão com o servidor. Verifique a internet.";
+ if(m.includes("row-level security"))return "Você não tem permissão para esta ação.";
+ if(m.includes("duplicate key")&&m.includes("sha256"))
+   return "Esta mesma foto já foi enviada em outro chamado. Tire uma foto nova do local.";
+ return msg||"Não foi possível concluir.";}
 const NOME_PERFIL={ADMIN:"Administração",GESTOR_CONTRATO:"Gestão do contrato",
-  FISCAL_ADM:"Fiscalização administrativa",FISCAL_TECNICO:"Fiscalização técnica",
-  FISCAL_SETORIAL:"Fiscalização setorial",DEMANDANTE:"Unidade demandante",
-  EMPRESA:"Empresa contratada"};
+ FISCAL_ADM:"Fiscalização administrativa",FISCAL_TECNICO:"Fiscalização técnica",
+ FISCAL_SETORIAL:"Fiscalização setorial",DEMANDANTE:"Unidade demandante",EMPRESA:"Empresa contratada"};
 const NOME_STATUS={ABERTO:"Aberto",RECEBIDO:"Recebido",EM_ORCAMENTO:"Em orçamento",
-  AGUARDANDO_AUTORIZACAO:"Aguardando autorização",AUTORIZADO:"Autorizado",
-  RECUSADO:"Recusado",BLOQUEADO_SEM_SALDO:"Barrado por falta de saldo",
-  EM_EXECUCAO:"Em execução",ATENDIDO:"Atendido, aguardando validação",
-  DEVOLVIDO:"Devolvido",EM_GARANTIA:"Em garantia",
-  REABERTO_GARANTIA:"Reaberto em garantia",CONCLUIDO:"Concluído"};
-
+ AGUARDANDO_AUTORIZACAO:"Aguardando autorização",AUTORIZADO:"Autorizado",RECUSADO:"Recusado",
+ BLOQUEADO_SEM_SALDO:"Barrado por falta de saldo",EM_EXECUCAO:"Em execução",
+ ATENDIDO:"Atendido, aguardando validação",DEVOLVIDO:"Devolvido",EM_GARANTIA:"Em garantia",
+ REABERTO_GARANTIA:"Reaberto em garantia",CONCLUIDO:"Concluído"};
 const dataHora=s=>s?new Date(s).toLocaleString("pt-BR",
-  {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}):"—";
+ {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}):"—";
 const soData=s=>s?new Date(s+"T12:00:00").toLocaleDateString("pt-BR"):"—";
+const mesAno=s=>s?new Date(s+"T12:00:00").toLocaleDateString("pt-BR",{month:"2-digit",year:"numeric"}):"—";
 const reais=n=>Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const GLOBAL=p=>["ADMIN","GESTOR_CONTRATO","FISCAL_ADM","FISCAL_TECNICO"].includes(p);
+const ALCADA=p=>["GESTOR_CONTRATO","FISCAL_ADM","FISCAL_TECNICO"].includes(p);
 
 function estadoPrazo(c){
-  const fim=["CONCLUIDO","RECUSADO","EM_GARANTIA","ATENDIDO"].includes(c.status);
-  if(fim||!c.prazo_limite) return {classe:"neutro",texto:null};
-  const agora=Date.now(), limite=new Date(c.prazo_limite).getTime();
-  const inicio=new Date(c.aberto_em).getTime(), restante=limite-agora;
-  if(restante<=0) return {classe:"vencido",texto:"Prazo vencido"};
-  const consumido=(agora-inicio)/(limite-inicio);
-  const horas=Math.floor(restante/3600000);
-  const txt=horas<24?`Faltam ${horas}h`:`Faltam ${Math.floor(horas/24)} dias`;
-  return {classe:consumido>=0.7?"apertado":"folgado",texto:txt};
-}
+ const fim=["CONCLUIDO","RECUSADO","EM_GARANTIA","ATENDIDO"].includes(c.status);
+ if(fim||!c.prazo_limite)return{classe:"neutro",texto:null};
+ const agora=Date.now(),limite=new Date(c.prazo_limite).getTime();
+ const inicio=new Date(c.aberto_em).getTime(),rest=limite-agora;
+ if(rest<=0)return{classe:"vencido",texto:"Prazo vencido"};
+ const cons=(agora-inicio)/(limite-inicio),h=Math.floor(rest/3600000);
+ return{classe:cons>=0.7?"apertado":"folgado",
+        texto:h<24?`Faltam ${h}h`:`Faltam ${Math.floor(h/24)} dias`};}
 const classeNivel=o=>o<=2?"critico":o<=4?"alto":"comum";
 
-/* ---------------- imagem ---------------- */
 async function comprimir(file,ladoMax,kbMax){
-  const img=await new Promise((ok,err)=>{const i=new Image();
-    i.onload=()=>ok(i); i.onerror=()=>err(new Error("imagem inválida"));
-    i.src=URL.createObjectURL(file);});
-  let w=img.width,h=img.height;
-  const escala=Math.min(1,ladoMax/Math.max(w,h));
-  const cv=document.createElement("canvas");
-  cv.width=Math.round(w*escala); cv.height=Math.round(h*escala);
-  cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);
-  URL.revokeObjectURL(img.src);
-  let q=0.85, blob;
-  for(let i=0;i<9;i++){
-    blob=await new Promise(r=>cv.toBlob(r,"image/jpeg",q));
-    if(blob.size<=kbMax*1024) break;
-    q-=0.09;
-    if(q<0.2){ cv.width=Math.round(cv.width*0.8); cv.height=Math.round(cv.height*0.8);
-      cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height); q=0.7; }
-  }
-  return blob;
-}
+ const img=await new Promise((ok,err)=>{const i=new Image();
+  i.onload=()=>ok(i);i.onerror=()=>err(new Error("imagem inválida"));i.src=URL.createObjectURL(file);});
+ const escala=Math.min(1,ladoMax/Math.max(img.width,img.height));
+ const cv=document.createElement("canvas");
+ cv.width=Math.round(img.width*escala); cv.height=Math.round(img.height*escala);
+ cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);
+ URL.revokeObjectURL(img.src);
+ let q=0.85,blob;
+ for(let i=0;i<9;i++){ blob=await new Promise(r=>cv.toBlob(r,"image/jpeg",q));
+  if(blob.size<=kbMax*1024)break; q-=0.09;
+  if(q<0.2){cv.width=Math.round(cv.width*0.8);cv.height=Math.round(cv.height*0.8);
+   cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);q=0.7;} }
+ return blob;}
 async function sha256(blob){
-  const h=await crypto.subtle.digest("SHA-256", await blob.arrayBuffer());
-  return [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,"0")).join("");
-}
-async function enviarFoto(chamadoId,file,momento,rodada){
-  const original=await comprimir(file,1600,2048);
-  const derivada=await comprimir(file,640,50);
-  const hash=await sha256(original), t=Date.now();
-  const po=`original/${chamadoId}/${momento.toLowerCase()}-${t}.jpg`;
-  const pd=`derivada/${chamadoId}/${momento.toLowerCase()}-${t}.jpg`;
-  let r=await sb.storage.from("chamado-foto").upload(po,original,{contentType:"image/jpeg"});
-  if(r.error) throw r.error;
-  r=await sb.storage.from("chamado-foto").upload(pd,derivada,{contentType:"image/jpeg"});
-  if(r.error) throw r.error;
-  const {error}=await sb.from("chamado_foto").insert({chamado_id:chamadoId,momento,
-    rodada:rodada||1,path_original:po,path_derivada:pd,
-    bytes_original:original.size,bytes_derivada:derivada.size,
-    sha256:hash,enviado_por:EU.id});
-  if(error) throw error;
-}
-async function urlFoto(path){
-  const {data}=await sb.storage.from("chamado-foto").createSignedUrl(path,300);
-  return data?.signedUrl||null;
-}
+ const h=await crypto.subtle.digest("SHA-256",await blob.arrayBuffer());
+ return [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,"0")).join("");}
+async function enviarFoto(id,file,momento,rodada){
+ const original=await comprimir(file,1600,2048), derivada=await comprimir(file,640,50);
+ const hash=await sha256(original), t=Date.now();
+ const po=`original/${id}/${momento.toLowerCase()}-${t}.jpg`;
+ const pd=`derivada/${id}/${momento.toLowerCase()}-${t}.jpg`;
+ let r=await sb.storage.from("chamado-foto").upload(po,original,{contentType:"image/jpeg"});
+ if(r.error)throw r.error;
+ r=await sb.storage.from("chamado-foto").upload(pd,derivada,{contentType:"image/jpeg"});
+ if(r.error)throw r.error;
+ const {error}=await sb.from("chamado_foto").insert({chamado_id:id,momento,rodada:rodada||1,
+  path_original:po,path_derivada:pd,bytes_original:original.size,bytes_derivada:derivada.size,
+  sha256:hash,enviado_por:EU.id});
+ if(error)throw error;}
+async function urlFoto(p){const{data}=await sb.storage.from("chamado-foto").createSignedUrl(p,300);
+ return data?.signedUrl||null;}
+async function galeria(id){
+ const {data}=await sb.from("chamado_foto").select("*").eq("chamado_id",id).order("enviado_em");
+ const imgs=[];
+ for(const f of (data||[])){const u=await urlFoto(f.path_derivada);
+  if(u)imgs.push(`<div><p class="rot">${f.momento==="ANTES"?"Antes":"Depois"} · ${dataHora(f.enviado_em)}</p>
+   <img class="foto" src="${u}" alt="Registro"></div>`);}
+ return imgs;}
+function htmlTimeline(tl){
+ return `<div class="bloco"><h3>Andamento</h3><ul class="linha-tempo">
+  ${(tl||[]).map(t=>`<li><p class="quando">${dataHora(t.criado_em)} · ${esc(t.responsavel)}</p>
+   <p class="oque">${esc(NOME_STATUS[t.status_novo]||t.status_novo)}</p>
+   ${t.observacao?`<p class="obs">${esc(t.observacao)}</p>`:""}</li>`).join("")
+   ||`<li><p class="obs">Sem registros.</p></li>`}</ul></div>`;}
 
-/* ================================================================
-   DEMANDANTE
-================================================================ */
+/* ================= DEMANDANTE ================= */
 async function carregarCatalogos(){
-  const [c,t,a,f]=await Promise.all([
-    sb.from("categoria_servico").select("id,nome").eq("ativo",true).order("nome"),
-    sb.from("tipo_servico").select("id,nome,categoria_id").eq("ativo",true).order("nome"),
-    sb.from("tipo_ambiente").select("id,nome").eq("ativo",true).order("id"),
-    sb.from("frase_urgencia").select("id,frase,ordem_exibicao,exige_data")
-      .eq("ativo",true).order("ordem_exibicao")]);
-  CATEGORIAS=c.data||[]; TIPOS=t.data||[]; AMBIENTES=a.data||[]; FRASES=f.data||[];
-}
+ const [c,t,a,f]=await Promise.all([
+  sb.from("categoria_servico").select("id,nome").eq("ativo",true).order("nome"),
+  sb.from("tipo_servico").select("id,nome,categoria_id").eq("ativo",true).order("nome"),
+  sb.from("tipo_ambiente").select("id,nome").eq("ativo",true).order("id"),
+  sb.from("frase_urgencia").select("id,frase,ordem_exibicao,exige_data").eq("ativo",true).order("ordem_exibicao")]);
+ CATEGORIAS=c.data||[];TIPOS=t.data||[];AMBIENTES=a.data||[];FRASES=f.data||[];}
 
 async function telaLista(){
-  $("conteudo").innerHTML=`
-    <div class="barra"><h2>Chamados da sua unidade</h2><span class="espaco"></span>
-      <button class="principal" id="btnNovo">Abrir chamado</button></div>
-    <div id="avisoLista"></div>
-    <div id="listaChamados"><p class="vazio">Carregando…</p></div>`;
-  $("btnNovo").onclick=telaNovo;
-  const {data,error}=await sb.from("v_chamado_demandante").select("*")
-    .order("aberto_em",{ascending:false});
-  if(error) return recado("avisoLista",traduzir(error.message),"erro");
-  if(!data.length){ $("listaChamados").innerHTML=
-    `<p class="vazio">Nenhum chamado aberto ainda.<br>Use “Abrir chamado” para registrar o primeiro.</p>`;
-    return; }
-  $("listaChamados").innerHTML=data.map(c=>{
-    const p=estadoPrazo(c);
-    return `<button class="chamado ${p.classe}" data-id="${c.id}">
-      <span class="linha1"><span class="num">nº ${c.numero}</span>
-        <span class="tit">${esc(c.tipo_servico)}</span></span>
-      <span class="linha2">${esc(c.ambiente)} · ${esc(c.setor_especifico)}</span>
-      <span class="linha3">
-        <span class="estado">${esc(NOME_STATUS[c.status]||c.status)}</span>
-        ${p.texto?`<span class="prazo ${p.classe}">${p.texto}</span>`:""}
-        ${!c.tem_foto_antes?`<span class="pendencia">Foto do antes pendente</span>`:""}
-        ${c.status==="ATENDIDO"?`<span class="pendencia">Aguarda sua validação</span>`:""}
-      </span></button>`;}).join("");
-  document.querySelectorAll(".chamado").forEach(b=>
-    b.onclick=()=>telaDetalheDemandante(Number(b.dataset.id)));
-}
+ $("conteudo").innerHTML=`<div class="barra"><h2>Chamados da sua unidade</h2>
+  <span class="espaco"></span><button class="principal" id="btnNovo">Abrir chamado</button></div>
+  <div id="avisoLista"></div><div id="listaChamados"><p class="vazio">Carregando…</p></div>`;
+ $("btnNovo").onclick=telaNovo;
+ const {data,error}=await sb.from("v_chamado_demandante").select("*").order("aberto_em",{ascending:false});
+ if(error)return recado("avisoLista",traduzir(error.message),"erro");
+ if(!data.length)return $("listaChamados").innerHTML=
+  `<p class="vazio">Nenhum chamado aberto ainda.<br>Use “Abrir chamado” para registrar o primeiro.</p>`;
+ $("listaChamados").innerHTML=data.map(c=>{const p=estadoPrazo(c);
+  return `<button class="chamado ${p.classe}" data-id="${c.id}">
+   <span class="linha1"><span class="num">nº ${c.numero}</span><span class="tit">${esc(c.tipo_servico)}</span></span>
+   <span class="linha2">${esc(c.ambiente)} · ${esc(c.setor_especifico)}</span>
+   <span class="linha3"><span class="estado">${esc(NOME_STATUS[c.status]||c.status)}</span>
+    ${p.texto?`<span class="prazo ${p.classe}">${p.texto}</span>`:""}
+    ${!c.tem_foto_antes?`<span class="pendencia">Foto do antes pendente</span>`:""}
+    ${c.status==="ATENDIDO"?`<span class="pendencia">Aguarda sua validação</span>`:""}
+   </span></button>`;}).join("");
+ document.querySelectorAll(".chamado").forEach(b=>b.onclick=()=>telaDetalheDemandante(Number(b.dataset.id)));}
 
 function telaNovo(){
-  $("conteudo").innerHTML=`
-    <div class="barra"><button class="discreto" id="btnVoltar">Voltar</button>
-      <h2>Abrir chamado</h2></div>
-    <div id="avisoNovo"></div>
-    <div class="bloco">
-      <div class="par">
-        <div class="campo"><label class="obrig" for="fCat">Categoria</label>
-          <select id="fCat"><option value="">Escolha…</option>
-          ${CATEGORIAS.map(c=>`<option value="${c.id}">${esc(c.nome)}</option>`).join("")}</select></div>
-        <div class="campo"><label class="obrig" for="fTipo">Tipo de serviço</label>
-          <select id="fTipo" disabled><option value="">Escolha a categoria antes</option></select></div>
-        <div class="campo"><label class="obrig" for="fAmb">Tipo de ambiente</label>
-          <select id="fAmb"><option value="">Escolha…</option>
-          ${AMBIENTES.map(a=>`<option value="${a.id}">${esc(a.nome)}</option>`).join("")}</select></div>
-        <div class="campo"><label class="obrig" for="fSetor">Local exato</label>
-          <input id="fSetor" maxlength="120" placeholder="Sala E5, bloco E">
-          <p class="ajuda">Onde alguém que não conhece o prédio conseguiria chegar.</p></div>
-      </div>
-      <div class="campo"><label class="obrig" for="fDesc">O que está acontecendo</label>
-        <textarea id="fDesc" maxlength="1000" placeholder="Duas lâmpadas queimadas sobre a mesa do professor."></textarea></div>
-      <div class="campo"><label class="obrig" for="fFrase">Como isso afeta o uso do ambiente</label>
-        <select id="fFrase"><option value="">Escolha…</option>
-        ${FRASES.map(f=>`<option value="${f.id}" data-data="${f.exige_data?1:0}">${esc(f.frase)}</option>`).join("")}</select>
-        <p class="ajuda">Escolha a frase que descreve a situação real. Ela define o prazo de atendimento.</p></div>
-      <div class="campo" id="boxData" style="display:none">
-        <label class="obrig" for="fData">Data esperada</label><input id="fData" type="date">
-        <p class="ajuda">Precisa ser pelo menos três dias úteis à frente.</p></div>
-      <div class="campo"><label class="obrig" for="fFoto">Foto do problema</label>
-        <input id="fFoto" type="file" accept="image/*" capture="environment">
-        <p class="ajuda">Serve como registro do antes. É reduzida automaticamente antes de subir.</p></div>
-      <button class="principal" id="btnSalvar">Abrir chamado</button>
-    </div>`;
-  $("btnVoltar").onclick=telaLista;
-  $("fCat").onchange=()=>{
-    const cat=Number($("fCat").value), lista=TIPOS.filter(t=>t.categoria_id===cat);
-    $("fTipo").disabled=!lista.length;
-    $("fTipo").innerHTML=`<option value="">Escolha…</option>`+
-      lista.map(t=>`<option value="${t.id}">${esc(t.nome)}</option>`).join("");
-  };
-  $("fFrase").onchange=()=>{
-    const op=$("fFrase").selectedOptions[0];
-    $("boxData").style.display = op && op.dataset.data==="1" ? "block":"none";
-  };
-  $("btnSalvar").onclick=salvarChamado;
-}
+ $("conteudo").innerHTML=`<div class="barra"><button class="discreto" id="btnVoltar">Voltar</button>
+  <h2>Abrir chamado</h2></div><div id="avisoNovo"></div><div class="bloco"><div class="par">
+  <div class="campo"><label class="obrig" for="fCat">Categoria</label><select id="fCat">
+   <option value="">Escolha…</option>${CATEGORIAS.map(c=>`<option value="${c.id}">${esc(c.nome)}</option>`).join("")}</select></div>
+  <div class="campo"><label class="obrig" for="fTipo">Tipo de serviço</label>
+   <select id="fTipo" disabled><option value="">Escolha a categoria antes</option></select></div>
+  <div class="campo"><label class="obrig" for="fAmb">Tipo de ambiente</label><select id="fAmb">
+   <option value="">Escolha…</option>${AMBIENTES.map(a=>`<option value="${a.id}">${esc(a.nome)}</option>`).join("")}</select></div>
+  <div class="campo"><label class="obrig" for="fSetor">Local exato</label>
+   <input id="fSetor" maxlength="120" placeholder="Sala E5, bloco E">
+   <p class="ajuda">Onde alguém que não conhece o prédio conseguiria chegar.</p></div></div>
+  <div class="campo"><label class="obrig" for="fDesc">O que está acontecendo</label>
+   <textarea id="fDesc" maxlength="1000" placeholder="Duas lâmpadas queimadas sobre a mesa do professor."></textarea></div>
+  <div class="campo"><label class="obrig" for="fFrase">Como isso afeta o uso do ambiente</label>
+   <select id="fFrase"><option value="">Escolha…</option>
+   ${FRASES.map(f=>`<option value="${f.id}" data-data="${f.exige_data?1:0}">${esc(f.frase)}</option>`).join("")}</select>
+   <p class="ajuda">Escolha a frase que descreve a situação real. Ela define o prazo de atendimento.</p></div>
+  <div class="campo" id="boxData" style="display:none"><label class="obrig" for="fData">Data esperada</label>
+   <input id="fData" type="date"><p class="ajuda">Precisa ser pelo menos três dias úteis à frente.</p></div>
+  <div class="campo"><label class="obrig" for="fFoto">Foto do problema</label>
+   <input id="fFoto" type="file" accept="image/*" capture="environment">
+   <p class="ajuda">Serve como registro do antes. É reduzida automaticamente antes de subir.</p></div>
+  <button class="principal" id="btnSalvar">Abrir chamado</button></div>`;
+ $("btnVoltar").onclick=telaLista;
+ $("fCat").onchange=()=>{const cat=Number($("fCat").value),l=TIPOS.filter(t=>t.categoria_id===cat);
+  $("fTipo").disabled=!l.length;
+  $("fTipo").innerHTML=`<option value="">Escolha…</option>`+l.map(t=>`<option value="${t.id}">${esc(t.nome)}</option>`).join("");};
+ $("fFrase").onchange=()=>{const op=$("fFrase").selectedOptions[0];
+  $("boxData").style.display=op&&op.dataset.data==="1"?"block":"none";};
+ $("btnSalvar").onclick=salvarChamado;}
 
 async function salvarChamado(){
-  recado("avisoNovo","");
-  const b=$("btnSalvar");
-  const d={unidade_id:EU.unidade_id,aberto_por:EU.id,
-    tipo_servico_id:Number($("fTipo").value)||null,
-    tipo_ambiente_id:Number($("fAmb").value)||null,
-    setor_especifico:$("fSetor").value.trim(),descricao:$("fDesc").value.trim(),
-    frase_urgencia_id:Number($("fFrase").value)||null,
-    data_esperada:$("boxData").style.display==="block"?($("fData").value||null):null,
-    nivel_codigo:"NORMAL",status:"ABERTO"};
-  const arq=$("fFoto").files[0];
-  if(!d.tipo_servico_id) return recado("avisoNovo","Escolha a categoria e o tipo de serviço.","erro");
-  if(!d.tipo_ambiente_id) return recado("avisoNovo","Escolha o tipo de ambiente.","erro");
-  if(d.setor_especifico.length<3) return recado("avisoNovo","Diga onde é, com pelo menos 3 letras.","erro");
-  if(d.descricao.length<10) return recado("avisoNovo","Descreva o problema com um pouco mais de detalhe.","erro");
-  if(!d.frase_urgencia_id) return recado("avisoNovo","Escolha como isso afeta o uso do ambiente.","erro");
-  if(!arq) return recado("avisoNovo","A foto do problema é obrigatória.","erro");
-  b.disabled=true; b.textContent="Abrindo…";
-  const {data,error}=await sb.from("chamado").insert(d).select("id,numero").single();
-  if(error){ b.disabled=false; b.textContent="Abrir chamado";
-             return recado("avisoNovo",traduzir(error.message),"erro"); }
-  try{ b.textContent="Enviando foto…"; await enviarFoto(data.id,arq,"ANTES",1); }
-  catch(e){ b.disabled=false; b.textContent="Abrir chamado";
-    return recado("avisoNovo",`Chamado nº ${data.numero} foi criado, mas a foto não subiu: `+
-      `${traduzir(e.message)} Abra o chamado na lista e envie a foto — a empresa só recebe depois disso.`,"atencao"); }
-  await telaLista();
-  recado("avisoLista",`Chamado nº ${data.numero} aberto. A empresa foi notificada.`,"bom");
-}
+ recado("avisoNovo",""); const b=$("btnSalvar");
+ const d={unidade_id:EU.unidade_id,aberto_por:EU.id,
+  tipo_servico_id:Number($("fTipo").value)||null,tipo_ambiente_id:Number($("fAmb").value)||null,
+  setor_especifico:$("fSetor").value.trim(),descricao:$("fDesc").value.trim(),
+  frase_urgencia_id:Number($("fFrase").value)||null,
+  data_esperada:$("boxData").style.display==="block"?($("fData").value||null):null,
+  nivel_codigo:"NORMAL",status:"ABERTO"};
+ const arq=$("fFoto").files[0];
+ if(!d.tipo_servico_id)return recado("avisoNovo","Escolha a categoria e o tipo de serviço.","erro");
+ if(!d.tipo_ambiente_id)return recado("avisoNovo","Escolha o tipo de ambiente.","erro");
+ if(d.setor_especifico.length<3)return recado("avisoNovo","Diga onde é, com pelo menos 3 letras.","erro");
+ if(d.descricao.length<10)return recado("avisoNovo","Descreva o problema com um pouco mais de detalhe.","erro");
+ if(!d.frase_urgencia_id)return recado("avisoNovo","Escolha como isso afeta o uso do ambiente.","erro");
+ if(!arq)return recado("avisoNovo","A foto do problema é obrigatória.","erro");
+ b.disabled=true;b.textContent="Abrindo…";
+ const {data,error}=await sb.from("chamado").insert(d).select("id,numero").single();
+ if(error){b.disabled=false;b.textContent="Abrir chamado";return recado("avisoNovo",traduzir(error.message),"erro");}
+ try{b.textContent="Enviando foto…";await enviarFoto(data.id,arq,"ANTES",1);}
+ catch(e){b.disabled=false;b.textContent="Abrir chamado";
+  return recado("avisoNovo",`Chamado nº ${data.numero} foi criado, mas a foto não subiu: ${traduzir(e.message)} `+
+   `Abra o chamado na lista e envie a foto — a empresa só recebe depois disso.`,"atencao");}
+ await telaLista(); recado("avisoLista",`Chamado nº ${data.numero} aberto. A empresa foi notificada.`,"bom");}
 
 async function telaDetalheDemandante(id){
-  $("conteudo").innerHTML=`<div class="barra">
-    <button class="discreto" id="btnVoltar">Voltar</button><h2>Chamado</h2></div>
-    <div id="avisoDet"></div><div id="corpoDet"><p class="vazio">Carregando…</p></div>`;
-  $("btnVoltar").onclick=telaLista;
-  const [{data:c,error:e1},{data:tl},{data:fotos}]=await Promise.all([
-    sb.from("v_chamado_demandante").select("*").eq("id",id).single(),
-    sb.from("v_timeline").select("*").eq("chamado_id",id).order("criado_em"),
-    sb.from("chamado_foto").select("*").eq("chamado_id",id).order("enviado_em")]);
-  if(e1||!c) return recado("avisoDet","Chamado não encontrado.","erro");
-  const p=estadoPrazo(c), imgs=[];
-  for(const f of (fotos||[])){ const u=await urlFoto(f.path_derivada);
-    if(u) imgs.push(`<div><p class="rot">${f.momento==="ANTES"?"Antes":"Depois"} · ${dataHora(f.enviado_em)}</p>
-      <img class="foto" src="${u}" alt="Registro"></div>`); }
+ $("conteudo").innerHTML=`<div class="barra"><button class="discreto" id="btnVoltar">Voltar</button>
+  <h2>Chamado</h2></div><div id="avisoDet"></div><div id="corpoDet"><p class="vazio">Carregando…</p></div>`;
+ $("btnVoltar").onclick=telaLista;
+ const [{data:c,error:e1},{data:tl}]=await Promise.all([
+  sb.from("v_chamado_demandante").select("*").eq("id",id).single(),
+  sb.from("v_timeline").select("*").eq("chamado_id",id).order("criado_em")]);
+ if(e1||!c)return recado("avisoDet","Chamado não encontrado.","erro");
+ const p=estadoPrazo(c), imgs=await galeria(id);
+ $("corpoDet").innerHTML=`<div class="bloco">
+  <div class="barra"><h3>nº ${c.numero} · ${esc(c.tipo_servico)}</h3><span class="espaco"></span>
+   <span class="estado">${esc(NOME_STATUS[c.status]||c.status)}</span>
+   ${p.texto?`<span class="prazo ${p.classe}">${p.texto}</span>`:""}</div>
+  <div class="par"><div>
+   <div class="dado"><p class="rot">Categoria</p><p class="val">${esc(c.categoria)}</p></div>
+   <div class="dado"><p class="rot">Ambiente</p><p class="val">${esc(c.ambiente)}</p></div>
+   <div class="dado"><p class="rot">Local exato</p><p class="val">${esc(c.setor_especifico)}</p></div></div>
+  <div><div class="dado"><p class="rot">Aberto em</p><p class="val">${dataHora(c.aberto_em)}</p></div>
+   <div class="dado"><p class="rot">Prazo de atendimento</p><p class="val">${dataHora(c.prazo_limite)}</p></div>
+   ${c.garantia_ate?`<div class="dado"><p class="rot">Garantia até</p><p class="val">${soData(c.garantia_ate)}</p></div>`:""}</div></div>
+  <div class="dado"><p class="rot">Descrição</p><p class="val">${esc(c.descricao)}</p></div></div>
+  ${!c.tem_foto_antes?`<div class="bloco"><h3>Foto do antes pendente</h3>
+   <p class="nota">A empresa não recebe este chamado enquanto a foto não for enviada.</p>
+   <div class="campo"><input id="fotoTardia" type="file" accept="image/*" capture="environment"></div>
+   <button class="principal" id="btnFotoTardia">Enviar foto</button></div>`:""}
+  ${imgs.length?`<div class="bloco"><h3>Registro fotográfico</h3><div class="par">${imgs.join("")}</div></div>`:""}
+  ${c.status==="ATENDIDO"?`<div class="bloco"><h3>Validar o serviço</h3>
+   <p class="nota">Confira no local antes de validar. Sem manifestação em 5 dias, o sistema
+    homologa como atendido com nota boa.</p>
+   <div class="campo"><label>Qualidade do serviço</label><div class="escala" id="escalaNota">
+    ${[[1,"Péssimo"],[2,"Ruim"],[3,"Regular"],[4,"Bom"],[5,"Excelente"]]
+      .map(([n,r])=>`<button data-n="${n}" aria-pressed="false">${r}</button>`).join("")}</div></div>
+   <div class="campo"><label for="fOcor">Observações</label><textarea id="fOcor" maxlength="1000"></textarea></div>
+   <div class="barra"><button class="principal" id="btnAceitar">Aceitar o serviço</button>
+    <button class="discreto risco" id="btnDevolver">Não foi resolvido, devolver</button></div></div>`:""}
+  ${htmlTimeline(tl)}`;
+ if($("btnFotoTardia"))$("btnFotoTardia").onclick=async()=>{
+  const f=$("fotoTardia").files[0]; if(!f)return recado("avisoDet","Escolha uma foto.","erro");
+  const b=$("btnFotoTardia");b.disabled=true;b.textContent="Enviando…";
+  try{await enviarFoto(id,f,"ANTES",1);await telaDetalheDemandante(id);}
+  catch(e){b.disabled=false;b.textContent="Enviar foto";recado("avisoDet",traduzir(e.message),"erro");}};
+ let nota=null;
+ document.querySelectorAll("#escalaNota button").forEach(bt=>bt.onclick=()=>{nota=Number(bt.dataset.n);
+  document.querySelectorAll("#escalaNota button").forEach(x=>x.setAttribute("aria-pressed",x===bt?"true":"false"));});
+ async function validar(at){
+  if(!nota)return recado("avisoDet","Escolha a qualidade do serviço.","erro");
+  if(!at&&$("fOcor").value.trim().length<10)
+   return recado("avisoDet","Diga o que continua errado, para a empresa saber o que refazer.","erro");
+  const {error}=await sb.rpc("validar_chamado",{p_chamado:id,p_nota:nota,p_atendida:at,
+   p_ocorrencias:$("fOcor").value.trim()||null});
+  if(error)return recado("avisoDet",traduzir(error.message),"erro");
+  await telaLista();
+  recado("avisoLista",at?"Serviço aceito. O chamado entrou em garantia.":"Chamado devolvido à empresa.","bom");}
+ if($("btnAceitar"))$("btnAceitar").onclick=()=>validar(true);
+ if($("btnDevolver"))$("btnDevolver").onclick=()=>validar(false);}
 
-  $("corpoDet").innerHTML=`
-    <div class="bloco">
-      <div class="barra"><h3>nº ${c.numero} · ${esc(c.tipo_servico)}</h3><span class="espaco"></span>
-        <span class="estado">${esc(NOME_STATUS[c.status]||c.status)}</span>
-        ${p.texto?`<span class="prazo ${p.classe}">${p.texto}</span>`:""}</div>
-      <div class="par">
-        <div><div class="dado"><p class="rot">Categoria</p><p class="val">${esc(c.categoria)}</p></div>
-          <div class="dado"><p class="rot">Ambiente</p><p class="val">${esc(c.ambiente)}</p></div>
-          <div class="dado"><p class="rot">Local exato</p><p class="val">${esc(c.setor_especifico)}</p></div></div>
-        <div><div class="dado"><p class="rot">Aberto em</p><p class="val">${dataHora(c.aberto_em)}</p></div>
-          <div class="dado"><p class="rot">Prazo de atendimento</p><p class="val">${dataHora(c.prazo_limite)}</p></div>
-          ${c.garantia_ate?`<div class="dado"><p class="rot">Garantia até</p><p class="val">${soData(c.garantia_ate)}</p></div>`:""}</div>
-      </div>
-      <div class="dado"><p class="rot">Descrição</p><p class="val">${esc(c.descricao)}</p></div>
-    </div>
-    ${!c.tem_foto_antes?`<div class="bloco"><h3>Foto do antes pendente</h3>
-      <p class="nota">A empresa não recebe este chamado enquanto a foto não for enviada.</p>
-      <div class="campo"><input id="fotoTardia" type="file" accept="image/*" capture="environment"></div>
-      <button class="principal" id="btnFotoTardia">Enviar foto</button></div>`:""}
-    ${imgs.length?`<div class="bloco"><h3>Registro fotográfico</h3><div class="par">${imgs.join("")}</div></div>`:""}
-    ${c.status==="ATENDIDO"?`<div class="bloco"><h3>Validar o serviço</h3>
-      <p class="nota">Confira no local antes de validar. Sem manifestação em 5 dias,
-        o sistema homologa como atendido com nota boa.</p>
-      <div class="campo"><label>Qualidade do serviço</label>
-        <div class="escala" id="escalaNota">${[[1,"Péssimo"],[2,"Ruim"],[3,"Regular"],[4,"Bom"],[5,"Excelente"]]
-          .map(([n,r])=>`<button data-n="${n}" aria-pressed="false">${r}</button>`).join("")}</div></div>
-      <div class="campo"><label for="fOcor">Observações</label>
-        <textarea id="fOcor" maxlength="1000"></textarea></div>
-      <div class="barra"><button class="principal" id="btnAceitar">Aceitar o serviço</button>
-        <button class="discreto risco" id="btnDevolver">Não foi resolvido, devolver</button></div></div>`:""}
-    <div class="bloco"><h3>Andamento</h3><ul class="linha-tempo">
-      ${(tl||[]).map(t=>`<li><p class="quando">${dataHora(t.criado_em)} · ${esc(t.responsavel)}</p>
-        <p class="oque">${esc(NOME_STATUS[t.status_novo]||t.status_novo)}</p>
-        ${t.observacao?`<p class="obs">${esc(t.observacao)}</p>`:""}</li>`).join("")||
-        `<li><p class="obs">Sem registros.</p></li>`}</ul></div>`;
-
-  if($("btnFotoTardia")) $("btnFotoTardia").onclick=async()=>{
-    const f=$("fotoTardia").files[0];
-    if(!f) return recado("avisoDet","Escolha uma foto.","erro");
-    const b=$("btnFotoTardia"); b.disabled=true; b.textContent="Enviando…";
-    try{ await enviarFoto(id,f,"ANTES",1); await telaDetalheDemandante(id); }
-    catch(e){ b.disabled=false; b.textContent="Enviar foto"; recado("avisoDet",traduzir(e.message),"erro"); }
-  };
-  let nota=null;
-  document.querySelectorAll("#escalaNota button").forEach(bt=>{ bt.onclick=()=>{
-    nota=Number(bt.dataset.n);
-    document.querySelectorAll("#escalaNota button").forEach(x=>
-      x.setAttribute("aria-pressed",x===bt?"true":"false")); };});
-  async function validar(atendida){
-    if(!nota) return recado("avisoDet","Escolha a qualidade do serviço.","erro");
-    if(!atendida && $("fOcor").value.trim().length<10)
-      return recado("avisoDet","Diga o que continua errado, para a empresa saber o que refazer.","erro");
-    const {error}=await sb.rpc("validar_chamado",{p_chamado:id,p_nota:nota,
-      p_atendida:atendida,p_ocorrencias:$("fOcor").value.trim()||null});
-    if(error) return recado("avisoDet",traduzir(error.message),"erro");
-    await telaLista();
-    recado("avisoLista",atendida?"Serviço aceito. O chamado entrou em garantia."
-                                :"Chamado devolvido à empresa.","bom");
-  }
-  if($("btnAceitar")) $("btnAceitar").onclick=()=>validar(true);
-  if($("btnDevolver")) $("btnDevolver").onclick=()=>validar(false);
-}
-
-/* ================================================================
-   EMPRESA
-================================================================ */
+/* ================= EMPRESA ================= */
 async function carregarEmpresa(){
-  const [pr,fu,tr]=await Promise.all([
-    sb.from("cidade_predio").select("id,nome").eq("ativo",true).order("id"),
-    sb.from("funcionario_empresa").select("id,nome,funcao").eq("ativo",true).order("nome"),
-    sb.from("tabela_referencia").select("id,nome,competencia").eq("ativo",true).order("id")]);
-  PREDIOS=pr.data||[]; FUNCIONARIOS=fu.data||[]; TABELAS=tr.data||[];
-}
+ const [pr,fu,tr]=await Promise.all([
+  sb.from("cidade_predio").select("id,nome").eq("ativo",true).order("id"),
+  sb.from("funcionario_empresa").select("id,nome,funcao").eq("ativo",true).order("nome"),
+  sb.from("tabela_referencia").select("id,nome,competencia").eq("ativo",true).order("id")]);
+ PREDIOS=pr.data||[];FUNCIONARIOS=fu.data||[];TABELAS=tr.data||[];}
 
 async function telaEmpresa(){
-  $("conteudo").innerHTML=`<div class="barra"><h2>Chamados</h2><span class="espaco"></span>
-    <select id="fOrdem" style="width:auto">
-      <option value="urgencia">Ordenar por urgência</option>
-      <option value="prazo">Ordenar por prazo</option>
-      <option value="abertura">Ordenar por data de abertura</option>
-      <option value="tipo">Ordenar por tipo de serviço</option>
-    </select></div>
-    <div id="avisoEmp"></div><div id="abas" class="abas"></div>
-    <div id="listaEmp"><p class="vazio">Carregando…</p></div>`;
-  $("fOrdem").value=ORDEM;
-  $("fOrdem").onchange=()=>{ ORDEM=$("fOrdem").value; pintarEmpresa(); };
+ $("conteudo").innerHTML=`<div class="barra"><h2>Chamados</h2><span class="espaco"></span>
+  <select id="fOrdem" style="width:auto">
+   <option value="urgencia">Ordenar por urgência</option><option value="prazo">Ordenar por prazo</option>
+   <option value="abertura">Ordenar por data de abertura</option>
+   <option value="tipo">Ordenar por tipo de serviço</option></select></div>
+  <div id="avisoEmp"></div><div id="abas" class="abas"></div>
+  <div id="listaEmp"><p class="vazio">Carregando…</p></div>`;
+ $("fOrdem").value=ORDEM; $("fOrdem").onchange=()=>{ORDEM=$("fOrdem").value;pintarEmpresa();};
+ const {error}=await sb.rpc("receber_chamados");
+ if(error)recado("avisoEmp",traduzir(error.message),"atencao");
+ await pintarEmpresa();}
 
-  /* Recebimento automático: o simples acesso à lista já marca como
-     recebido, que é o que a especificação manda e o que faz a contagem
-     de prazo começar a valer. */
-  const {error:eR}=await sb.rpc("receber_chamados");
-  if(eR) recado("avisoEmp",traduzir(eR.message),"atencao");
-  await pintarEmpresa();
-}
-
-let CACHE_EMP=[];
 async function pintarEmpresa(){
-  const {data,error}=await sb.from("v_chamado_gestao").select("*");
-  if(error) return recado("avisoEmp",traduzir(error.message),"erro");
-  CACHE_EMP=data||[];
-  const abertos=CACHE_EMP.filter(c=>!["CONCLUIDO","RECUSADO"].includes(c.status));
-  const porPredio={};
-  abertos.forEach(c=>{ const k=c.predio||"Sem prédio definido";
-    porPredio[k]=(porPredio[k]||0)+1; });
-  $("abas").innerHTML=
-    `<button data-aba="TODOS" aria-selected="${ABA==="TODOS"}">Todos
-       <span class="contagem">${abertos.length}</span></button>`+
-    Object.keys(porPredio).sort().map(k=>
-      `<button data-aba="${esc(k)}" aria-selected="${ABA===k}">${esc(k)}
-        <span class="contagem">${porPredio[k]}</span></button>`).join("");
-  document.querySelectorAll("#abas button").forEach(b=>
-    b.onclick=()=>{ ABA=b.dataset.aba; pintarEmpresa(); });
+ const {data,error}=await sb.from("v_chamado_gestao").select("*");
+ if(error)return recado("avisoEmp",traduzir(error.message),"erro");
+ const abertos=(data||[]).filter(c=>!["CONCLUIDO","RECUSADO"].includes(c.status));
+ const porPredio={}; abertos.forEach(c=>{const k=c.predio||"Sem prédio definido";porPredio[k]=(porPredio[k]||0)+1;});
+ $("abas").innerHTML=`<button data-aba="TODOS" aria-selected="${ABA==="TODOS"}">Todos
+   <span class="contagem">${abertos.length}</span></button>`+
+  Object.keys(porPredio).sort().map(k=>`<button data-aba="${esc(k)}" aria-selected="${ABA===k}">${esc(k)}
+   <span class="contagem">${porPredio[k]}</span></button>`).join("");
+ document.querySelectorAll("#abas button").forEach(b=>b.onclick=()=>{ABA=b.dataset.aba;pintarEmpresa();});
+ let lista=ABA==="TODOS"?abertos:abertos.filter(c=>(c.predio||"Sem prédio definido")===ABA);
+ const ord={urgencia:(a,b)=>a.nivel_ordem-b.nivel_ordem||(new Date(a.prazo_limite||8e15)-new Date(b.prazo_limite||8e15)),
+  prazo:(a,b)=>new Date(a.prazo_limite||8e15)-new Date(b.prazo_limite||8e15),
+  abertura:(a,b)=>new Date(b.aberto_em)-new Date(a.aberto_em),
+  tipo:(a,b)=>a.tipo_servico.localeCompare(b.tipo_servico,"pt-BR")};
+ lista=[...lista].sort(ord[ORDEM]);
+ if(!lista.length)return $("listaEmp").innerHTML=`<p class="vazio">Nenhum chamado aberto nesta aba.</p>`;
+ $("listaEmp").innerHTML=lista.map(c=>{const p=estadoPrazo(c);
+  return `<button class="chamado ${p.classe}" data-id="${c.id}">
+   <span class="linha1"><span class="num">nº ${c.numero}</span><span class="tit">${esc(c.tipo_servico)}</span></span>
+   <span class="linha2">${esc(c.unidade_nome)} · ${esc(c.ambiente)} · ${esc(c.setor_especifico)}</span>
+   <span class="linha3"><span class="nivel ${classeNivel(c.nivel_ordem)}">${esc(c.nivel_nome)}</span>
+    <span class="estado">${esc(NOME_STATUS[c.status]||c.status)}</span>
+    ${p.texto?`<span class="prazo ${p.classe}">${p.texto}</span>`:""}
+    ${c.execucao_emergencial?`<span class="pendencia">Execução emergencial</span>`:""}</span></button>`;}).join("");
+ document.querySelectorAll("#listaEmp .chamado").forEach(b=>b.onclick=()=>telaDetalheEmpresa(Number(b.dataset.id)));}
 
-  let lista=ABA==="TODOS"?abertos:abertos.filter(c=>(c.predio||"Sem prédio definido")===ABA);
-  const ordenar={
-    urgencia:(a,b)=>a.nivel_ordem-b.nivel_ordem||
-      (new Date(a.prazo_limite||8e15)-new Date(b.prazo_limite||8e15)),
-    prazo:(a,b)=>new Date(a.prazo_limite||8e15)-new Date(b.prazo_limite||8e15),
-    abertura:(a,b)=>new Date(b.aberto_em)-new Date(a.aberto_em),
-    tipo:(a,b)=>a.tipo_servico.localeCompare(b.tipo_servico,"pt-BR")};
-  lista=[...lista].sort(ordenar[ORDEM]);
-
-  if(!lista.length){ $("listaEmp").innerHTML=`<p class="vazio">Nenhum chamado aberto nesta aba.</p>`; return; }
-  $("listaEmp").innerHTML=lista.map(c=>{
-    const p=estadoPrazo(c);
-    return `<button class="chamado ${p.classe}" data-id="${c.id}">
-      <span class="linha1"><span class="num">nº ${c.numero}</span>
-        <span class="tit">${esc(c.tipo_servico)}</span></span>
-      <span class="linha2">${esc(c.unidade_nome)} · ${esc(c.ambiente)} · ${esc(c.setor_especifico)}</span>
-      <span class="linha3">
-        <span class="nivel ${classeNivel(c.nivel_ordem)}">${esc(c.nivel_nome)}</span>
-        <span class="estado">${esc(NOME_STATUS[c.status]||c.status)}</span>
-        ${p.texto?`<span class="prazo ${p.classe}">${p.texto}</span>`:""}
-        ${c.execucao_emergencial?`<span class="pendencia">Execução emergencial</span>`:""}
-      </span></button>`;}).join("");
-  document.querySelectorAll("#listaEmp .chamado").forEach(b=>
-    b.onclick=()=>telaDetalheEmpresa(Number(b.dataset.id)));
-}
-
-function linhasInsumo(itens,fase,editavel){
-  const total=itens.reduce((s,i)=>s+Number(i.valor_total),0);
-  return `<table><thead><tr><th>Código</th><th>Descrição</th><th>Un.</th>
-      <th class="num">Qtd</th><th class="num">Unitário</th><th class="num">Total</th>
-      ${editavel?"<th></th>":""}</tr></thead><tbody>
-    ${itens.length?itens.map(i=>`<tr>
-      <td>${esc(i.codigo_snapshot)}</td><td>${esc(i.descricao_snapshot)}</td>
-      <td>${esc(i.unidade_medida_snapshot)}</td>
-      <td class="num">${Number(i.quantidade).toLocaleString("pt-BR")}</td>
-      <td class="num">${reais(i.valor_unitario_snapshot)}</td>
-      <td class="num">${reais(i.valor_total)}</td>
-      ${editavel?`<td><button class="discreto risco" data-rm="${i.id}">Remover</button></td>`:""}
-      </tr>`).join(""):`<tr><td colspan="${editavel?7:6}">Nenhum item lançado.</td></tr>`}
-    </tbody><tfoot><tr><td colspan="${editavel?5:5}">Total ${fase.toLowerCase()}</td>
-      <td class="num">${reais(total)}</td>${editavel?"<td></td>":""}</tr></tfoot></table>`;
-}
+function tabelaInsumo(itens,fase,editavel){
+ const total=itens.reduce((s,i)=>s+Number(i.valor_total),0);
+ return `<div class="rolagem"><table><thead><tr><th>Código</th><th>Descrição</th><th>Un.</th>
+  <th class="num">Qtd</th><th class="num">Unitário</th><th class="num">Total</th>${editavel?"<th></th>":""}</tr></thead>
+  <tbody>${itens.length?itens.map(i=>`<tr><td>${esc(i.codigo_snapshot)}</td>
+   <td>${esc(i.descricao_snapshot)}</td><td>${esc(i.unidade_medida_snapshot)}</td>
+   <td class="num">${Number(i.quantidade).toLocaleString("pt-BR")}</td>
+   <td class="num">${reais(i.valor_unitario_snapshot)}</td><td class="num">${reais(i.valor_total)}</td>
+   ${editavel?`<td><button class="discreto risco" data-rm="${i.id}">Remover</button></td>`:""}</tr>`).join("")
+   :`<tr><td colspan="${editavel?7:6}">Nenhum item lançado.</td></tr>`}</tbody>
+  <tfoot><tr><td colspan="5">Total ${fase}</td><td class="num">${reais(total)}</td>
+   ${editavel?"<td></td>":""}</tr></tfoot></table></div>`;}
 
 async function telaDetalheEmpresa(id){
-  $("conteudo").innerHTML=`<div class="barra">
-    <button class="discreto" id="btnVoltar">Voltar</button><h2>Chamado</h2></div>
-    <div id="avisoDet"></div><div id="corpoDet"><p class="vazio">Carregando…</p></div>`;
-  $("btnVoltar").onclick=telaEmpresa;
+ $("conteudo").innerHTML=`<div class="barra"><button class="discreto" id="btnVoltar">Voltar</button>
+  <h2>Chamado</h2></div><div id="avisoDet"></div><div id="corpoDet"><p class="vazio">Carregando…</p></div>`;
+ $("btnVoltar").onclick=telaEmpresa;
+ const [{data:c,error:e1},{data:tl},{data:ins},{data:rod},{data:fts}]=await Promise.all([
+  sb.from("v_chamado_gestao").select("*").eq("id",id).single(),
+  sb.from("v_timeline").select("*").eq("chamado_id",id).order("criado_em"),
+  sb.from("v_insumo").select("*").eq("chamado_id",id).order("id"),
+  sb.rpc("rodada_atual",{p_chamado:id}),
+  sb.from("chamado_foto").select("momento,rodada").eq("chamado_id",id)]);
+ if(e1||!c)return recado("avisoDet","Chamado não encontrado.","erro");
+ const RODADA=rod||1;
+ const prev=(ins||[]).filter(i=>i.fase==="PREVISTO"), exec=(ins||[]).filter(i=>i.fase==="EXECUTADO");
+ const p=estadoPrazo(c), imgs=await galeria(id);
+ const podeOrcar=["RECEBIDO","EM_ORCAMENTO"].includes(c.status);
+ const podeIniciar=["AUTORIZADO","DEVOLVIDO","REABERTO_GARANTIA"].includes(c.status)
+   ||(c.status==="RECEBIDO"&&c.nivel_codigo==="EMERGENCIA");
+ $("corpoDet").innerHTML=`<div class="bloco">
+  <div class="barra"><h3>nº ${c.numero} · ${esc(c.tipo_servico)}</h3><span class="espaco"></span>
+   <span class="nivel ${classeNivel(c.nivel_ordem)}">${esc(c.nivel_nome)}</span>
+   <span class="estado">${esc(NOME_STATUS[c.status]||c.status)}</span>
+   ${p.texto?`<span class="prazo ${p.classe}">${p.texto}</span>`:""}</div>
+  <div class="par"><div>
+   <div class="dado"><p class="rot">Unidade</p><p class="val">${esc(c.unidade_nome)}</p></div>
+   <div class="dado"><p class="rot">Prédio</p><p class="val">${esc(c.predio||"não definido")}</p></div>
+   <div class="dado"><p class="rot">Local exato</p><p class="val">${esc(c.setor_especifico)}</p></div></div>
+  <div><div class="dado"><p class="rot">Aberto em</p><p class="val">${dataHora(c.aberto_em)}</p></div>
+   <div class="dado"><p class="rot">Prazo</p><p class="val">${dataHora(c.prazo_limite)}</p></div>
+   <div class="dado"><p class="rot">Solicitante</p><p class="val">${esc(c.aberto_por_nome||"—")}</p></div>
+   ${c.funcionario_nome?`<div class="dado"><p class="rot">Executante</p><p class="val">${esc(c.funcionario_nome)}</p></div>`:""}</div></div>
+  <div class="dado"><p class="rot">Descrição</p><p class="val">${esc(c.descricao)}</p></div></div>
+  ${imgs.length?`<div class="bloco"><h3>Registro fotográfico</h3><div class="par">${imgs.join("")}</div></div>`:""}
+  <div class="bloco"><h3>Orçamento</h3>
+   <p class="nota">Acima de R$ 2.000, somando o que a mesma unidade já orçou na mesma
+    categoria nos últimos 30 dias, o chamado vai para autorização.</p>
+   ${tabelaInsumo(prev,"previsto",podeOrcar)}
+   ${podeOrcar?`<div class="grade-insumo" style="margin-top:1rem">
+    <div class="campo"><label for="iCod">Código</label><input id="iCod"></div>
+    <div class="campo"><label for="iDesc">Descrição</label><input id="iDesc"></div>
+    <div class="campo"><label for="iUn">Un.</label><input id="iUn" value="un"></div>
+    <div class="campo"><label for="iQtd">Qtd</label><input id="iQtd" type="number" step="0.01" min="0.01"></div>
+    <div class="campo"><label for="iVal">Unitário</label><input id="iVal" type="number" step="0.01" min="0"></div>
+    <div class="campo"><label>&nbsp;</label><button class="discreto" id="btnAddPrev">Incluir</button></div></div>
+   <div class="campo"><label for="iTab">Tabela de referência</label><select id="iTab">
+    ${TABELAS.map(t=>`<option value="${t.id}">${esc(t.nome)} · ${mesAno(t.competencia)}</option>`).join("")}</select>
+    <p class="ajuda">Código que não existir nessa tabela é cadastrado como pendente de homologação.</p></div>
+   <button class="principal" id="btnOrcar">Enviar orçamento</button>`:""}</div>
+  ${podeIniciar?`<div class="bloco"><h3>Iniciar execução</h3>
+   ${c.status==="RECEBIDO"&&c.nivel_codigo==="EMERGENCIA"?
+    `<p class="nota">Emergência: pode executar antes de orçar. O orçamento passa a ser
+     obrigatório para encerrar, e se cruzar a alçada vai para ratificação.</p>`:""}
+   <div class="par"><div class="campo"><label class="obrig" for="fMao">Mão de obra</label>
+    <select id="fMao"><option value="FIXA">Fixa</option><option value="EVENTUAL">Eventual</option></select></div>
+   <div class="campo"><label for="fFunc">Funcionário</label><select id="fFunc"><option value="">Escolha…</option>
+    ${FUNCIONARIOS.map(f=>`<option value="${f.id}">${esc(f.nome)} — ${esc(f.funcao)}</option>`).join("")}</select>
+    <p class="ajuda">Obrigatório quando a mão de obra é fixa.</p></div></div>
+   <button class="principal" id="btnIniciar">Iniciar execução</button></div>`:""}
+  ${c.status==="EM_EXECUCAO"?`<div class="bloco"><h3>Prestação de contas</h3>
+   <p class="nota">Feche a lista do que foi aplicado, envie a foto do depois e informe o tempo gasto.</p>
+   ${tabelaInsumo(exec,"executado",true)}
+   <div class="grade-insumo" style="margin-top:1rem">
+    <div class="campo"><label for="eCod">Código</label><input id="eCod"></div>
+    <div class="campo"><label for="eDesc">Descrição</label><input id="eDesc"></div>
+    <div class="campo"><label for="eUn">Un.</label><input id="eUn" value="un"></div>
+    <div class="campo"><label for="eQtd">Qtd</label><input id="eQtd" type="number" step="0.01" min="0.01"></div>
+    <div class="campo"><label for="eVal">Unitário</label><input id="eVal" type="number" step="0.01" min="0"></div>
+    <div class="campo"><label>&nbsp;</label><button class="discreto" id="btnAddExec">Incluir</button></div></div>
+   <div class="par"><div class="campo"><label class="obrig" for="fFotoDep">Foto do depois</label>
+    <input id="fFotoDep" type="file" accept="image/*" capture="environment"></div>
+   <div class="campo"><label class="obrig" for="fHoras">Tempo de execução (horas)</label>
+    <input id="fHoras" type="number" step="0.5" min="0.5"></div></div>
+   <button class="principal" id="btnEncerrar">Registrar atendimento</button></div>`:""}
+  ${htmlTimeline(tl)}`;
+ document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=async()=>{
+  const {error}=await sb.from("chamado_insumo").delete().eq("id",Number(b.dataset.rm));
+  if(error)return recado("avisoDet",traduzir(error.message),"erro"); telaDetalheEmpresa(id);});
+ async function incluir(pf,fase){
+  const cod=$(pf+"Cod").value.trim(),desc=$(pf+"Desc").value.trim();
+  const un=$(pf+"Un").value.trim()||"un",qtd=Number($(pf+"Qtd").value),val=Number($(pf+"Val").value);
+  if(!cod||!desc)return recado("avisoDet","Informe código e descrição do item.","erro");
+  if(!(qtd>0))return recado("avisoDet","A quantidade precisa ser maior que zero.","erro");
+  if(!(val>=0))return recado("avisoDet","Informe o valor unitário.","erro");
+  let itemId=null; const tab=Number($("iTab")?.value)||TABELAS[0]?.id;
+  if(tab){
+   const {data:achado}=await sb.from("item_referencia").select("id")
+     .eq("tabela_referencia_id",tab).eq("codigo",cod).maybeSingle();
+   if(achado)itemId=achado.id;
+   else{const {data:novo,error:eN}=await sb.from("item_referencia").insert({
+     tabela_referencia_id:tab,codigo:cod,descricao:desc,unidade_medida:un,valor_unitario:val,
+     status:"PENDENTE_HOMOLOGACAO",criado_por:EU.id}).select("id").single();
+    if(eN)return recado("avisoDet",traduzir(eN.message),"erro"); itemId=novo.id;}}
+  const {error}=await sb.from("chamado_insumo").insert({chamado_id:id,fase,item_referencia_id:itemId,
+   codigo_snapshot:cod,descricao_snapshot:desc,unidade_medida_snapshot:un,
+   valor_unitario_snapshot:val,quantidade:qtd,lancado_por:EU.id});
+  if(error)return recado("avisoDet",traduzir(error.message),"erro"); telaDetalheEmpresa(id);}
+ if($("btnAddPrev"))$("btnAddPrev").onclick=()=>incluir("i","PREVISTO");
+ if($("btnAddExec"))$("btnAddExec").onclick=()=>incluir("e","EXECUTADO");
+ if($("btnOrcar"))$("btnOrcar").onclick=async()=>{
+  const b=$("btnOrcar");b.disabled=true;b.textContent="Enviando…";
+  const {data,error}=await sb.rpc("enviar_orcamento",{p_chamado:id});
+  b.disabled=false;b.textContent="Enviar orçamento";
+  if(error)return recado("avisoDet",traduzir(error.message),"erro");
+  const msg={AUTORIZADO:"Orçamento aprovado automaticamente. Pode iniciar a execução.",
+   AGUARDANDO_AUTORIZACAO:"Orçamento acima da alçada. Enviado para autorização da fiscalização.",
+   BLOQUEADO_SEM_SALDO:"Não há saldo disponível. A gestão do contrato foi avisada.",
+   EM_EXECUCAO:"Orçamento posterior registrado.",
+   EM_EXECUCAO_AGUARDANDO_RATIFICACAO:"Orçamento registrado. A execução emergencial aguarda ratificação."}[data]||data;
+  await telaDetalheEmpresa(id);
+  recado("avisoDet",msg,data==="BLOQUEADO_SEM_SALDO"?"atencao":"bom");};
+ if($("btnIniciar"))$("btnIniciar").onclick=async()=>{
+  const mao=$("fMao").value,func=Number($("fFunc").value)||null;
+  if(mao==="FIXA"&&!func)return recado("avisoDet","Mão de obra fixa exige a indicação do funcionário.","erro");
+  const b=$("btnIniciar");b.disabled=true;b.textContent="Iniciando…";
+  const {error}=await sb.rpc("iniciar_execucao",{p_chamado:id,p_mao_obra:mao,p_funcionario:func});
+  b.disabled=false;b.textContent="Iniciar execução";
+  if(error)return recado("avisoDet",traduzir(error.message),"erro");
+  await telaDetalheEmpresa(id); recado("avisoDet","Execução iniciada.","bom");};
+ if($("btnEncerrar"))$("btnEncerrar").onclick=async()=>{
+  const horas=Number($("fHoras").value),arq=$("fFotoDep").files[0];
+  if(!(horas>0))return recado("avisoDet","Informe o tempo de execução em horas.","erro");
+  const temFoto=(fts||[]).some(f=>f.momento==="DEPOIS"&&f.rodada===RODADA);
+  if(!temFoto&&!arq)return recado("avisoDet","A foto do depois é obrigatória.","erro");
+  const b=$("btnEncerrar");b.disabled=true;b.textContent="Registrando…";
+  try{if(arq){b.textContent="Enviando foto…";await enviarFoto(id,arq,"DEPOIS",RODADA);}}
+  catch(e){b.disabled=false;b.textContent="Registrar atendimento";
+   return recado("avisoDet",traduzir(e.message),"erro");}
+  const {error}=await sb.rpc("registrar_atendimento",{p_chamado:id,p_horas:horas});
+  b.disabled=false;b.textContent="Registrar atendimento";
+  if(error)return recado("avisoDet",traduzir(error.message),"erro");
+  await telaEmpresa(); recado("avisoEmp","Atendimento registrado. A unidade foi avisada para validar.","bom");};}
 
-  const [{data:c,error:e1},{data:tl},{data:fotos},{data:ins},{data:rod}]=await Promise.all([
-    sb.from("v_chamado_gestao").select("*").eq("id",id).single(),
-    sb.from("v_timeline").select("*").eq("chamado_id",id).order("criado_em"),
-    sb.from("chamado_foto").select("*").eq("chamado_id",id).order("enviado_em"),
-    sb.from("v_insumo").select("*").eq("chamado_id",id).order("id"),
-    sb.rpc("rodada_atual",{p_chamado:id})]);
-  if(e1||!c) return recado("avisoDet","Chamado não encontrado.","erro");
-  const RODADA=rod||1;
-  const previstos=(ins||[]).filter(i=>i.fase==="PREVISTO");
-  const executados=(ins||[]).filter(i=>i.fase==="EXECUTADO");
-  const p=estadoPrazo(c);
-  const podeOrcar=["RECEBIDO","EM_ORCAMENTO"].includes(c.status);
-  const podeIniciar=["AUTORIZADO","DEVOLVIDO","REABERTO_GARANTIA"].includes(c.status)
-                    ||(c.status==="RECEBIDO"&&c.nivel_codigo==="EMERGENCIA");
-  const emExecucao=c.status==="EM_EXECUCAO";
-  const imgs=[];
-  for(const f of (fotos||[])){ const u=await urlFoto(f.path_derivada);
-    if(u) imgs.push(`<div><p class="rot">${f.momento==="ANTES"?"Antes":"Depois"} · ${dataHora(f.enviado_em)}</p>
-      <img class="foto" src="${u}" alt="Registro"></div>`); }
+/* ================= FISCALIZAÇÃO ================= */
+async function telaFiscal(){
+ const abas=[["decisoes","Decisões"],["chamados","Chamados"]];
+ if(GLOBAL(EU.perfil)) abas.push(["cotas","Cotas e saldo"]);
+ if(!ALCADA(EU.perfil)&&!GLOBAL(EU.perfil)) ABA_FISC="chamados";
+ $("conteudo").innerHTML=`<div class="barra"><h2>Fiscalização</h2></div>
+  <div id="avisoFisc"></div><div class="abas" id="abasFisc">
+  ${abas.map(([k,r])=>`<button data-k="${k}" aria-selected="${ABA_FISC===k}">${r}</button>`).join("")}</div>
+  <div id="painelFisc"><p class="vazio">Carregando…</p></div>`;
+ document.querySelectorAll("#abasFisc button").forEach(b=>
+  b.onclick=()=>{ABA_FISC=b.dataset.k;telaFiscal();});
+ if(ABA_FISC==="decisoes") await painelDecisoes();
+ else if(ABA_FISC==="cotas") await painelCotas();
+ else await painelChamados();}
 
-  $("corpoDet").innerHTML=`
-    <div class="bloco">
-      <div class="barra"><h3>nº ${c.numero} · ${esc(c.tipo_servico)}</h3><span class="espaco"></span>
-        <span class="nivel ${classeNivel(c.nivel_ordem)}">${esc(c.nivel_nome)}</span>
-        <span class="estado">${esc(NOME_STATUS[c.status]||c.status)}</span>
-        ${p.texto?`<span class="prazo ${p.classe}">${p.texto}</span>`:""}</div>
-      <div class="par">
-        <div><div class="dado"><p class="rot">Unidade</p><p class="val">${esc(c.unidade_nome)}</p></div>
-          <div class="dado"><p class="rot">Prédio</p><p class="val">${esc(c.predio||"não definido")}</p></div>
-          <div class="dado"><p class="rot">Local exato</p><p class="val">${esc(c.setor_especifico)}</p></div>
-          <div class="dado"><p class="rot">Ambiente</p><p class="val">${esc(c.ambiente)}</p></div></div>
-        <div><div class="dado"><p class="rot">Aberto em</p><p class="val">${dataHora(c.aberto_em)}</p></div>
-          <div class="dado"><p class="rot">Prazo</p><p class="val">${dataHora(c.prazo_limite)}</p></div>
-          <div class="dado"><p class="rot">Solicitante</p><p class="val">${esc(c.aberto_por_nome||"—")}</p></div>
-          ${c.funcionario_nome?`<div class="dado"><p class="rot">Executante</p><p class="val">${esc(c.funcionario_nome)}</p></div>`:""}</div>
-      </div>
-      <div class="dado"><p class="rot">Descrição</p><p class="val">${esc(c.descricao)}</p></div>
-      <div class="dado"><p class="rot">Situação informada na abertura</p><p class="val">${esc(c.situacao_informada)}</p></div>
-    </div>
-    ${imgs.length?`<div class="bloco"><h3>Registro fotográfico</h3><div class="par">${imgs.join("")}</div></div>`:""}
+async function painelDecisoes(){
+ const [{data:fila},{data:itens},{data:sobras},{data:todos}]=await Promise.all([
+  sb.from("v_fila_autorizacao").select("*").order("nivel_ordem"),
+  sb.from("v_item_pendente").select("*").order("criado_em"),
+  sb.from("v_sobra_cota").select("*").order("unidade_nome"),
+  sb.from("v_chamado_gestao").select("*").eq("status","EM_EXECUCAO")]);
+ const ratif=(todos||[]).filter(c=>c.execucao_emergencial&&Number(c.total_previsto)>=2000);
+ const nada=!(fila||[]).length&&!(itens||[]).length&&!(sobras||[]).length&&!ratif.length;
+ $("painelFisc").innerHTML=nada?`<p class="vazio">Nada aguardando decisão.</p>`:`
+  ${(fila||[]).length?`<div class="bloco"><h3>Autorização de alçada</h3>
+   <p class="nota">O valor agregado é o que a mesma unidade já orçou na mesma categoria
+    nos 30 dias anteriores. É ele que dispara a regra, mesmo quando o chamado isolado é pequeno.</p>
+   ${fila.map(f=>`<div class="chamado neutro" style="cursor:default">
+    <span class="linha1"><span class="num">nº ${f.numero}</span>
+     <span class="tit">${esc(f.tipo_servico)}</span></span>
+    <span class="linha2">${esc(f.unidade_nome)} · ${esc(f.categoria)} · ${esc(f.setor_especifico)}</span>
+    <span class="linha2">${esc(f.descricao)}</span>
+    <span class="linha3"><span class="nivel ${classeNivel(f.nivel_ordem)}">${esc(f.nivel_nome)}</span>
+     <span class="valor">Chamado ${reais(f.valor_chamado)}</span>
+     <span class="valor">Agregado 30 dias ${reais(f.valor_agregado_30d)}</span></span>
+    <div class="barra" style="margin:.7rem 0 0">
+     <button class="principal" data-aut="${f.id}">Autorizar</button>
+     <button class="discreto risco" data-rec="${f.id}">Recusar</button>
+     <input id="just${f.id}" placeholder="Justificativa (obrigatória para recusar)" style="max-width:26rem">
+    </div></div>`).join("")}</div>`:""}
+  ${ratif.length?`<div class="bloco"><h3>Ratificação de execução emergencial</h3>
+   <p class="nota">Já foi executado, sem orçamento prévio, por ser emergência. Cabe ratificar
+    o que foi feito, não autorizar o que ainda não aconteceu.</p>
+   ${ratif.map(c=>`<button class="chamado neutro" data-id="${c.id}">
+    <span class="linha1"><span class="num">nº ${c.numero}</span><span class="tit">${esc(c.tipo_servico)}</span></span>
+    <span class="linha2">${esc(c.unidade_nome)} · ${esc(c.setor_especifico)}</span>
+    <span class="linha3"><span class="valor">Orçado ${reais(c.total_previsto)}</span></span></button>`).join("")}</div>`:""}
+  ${(itens||[]).length?`<div class="bloco"><h3>Preços aguardando homologação</h3>
+   <p class="nota">Itens que a empresa lançou fora da tabela de referência. Enquanto pendentes,
+    valem para o chamado em que foram usados mas não viram preço reutilizável.</p>
+   <div class="rolagem"><table><thead><tr><th>Código</th><th>Descrição</th><th>Un.</th>
+    <th class="num">Valor</th><th>Tabela</th><th class="num">Usos</th><th></th></tr></thead><tbody>
+   ${itens.map(i=>`<tr><td>${esc(i.codigo)}</td><td>${esc(i.descricao)}</td>
+    <td>${esc(i.unidade_medida)}</td><td class="num">${reais(i.valor_unitario)}</td>
+    <td>${esc(i.tabela_nome)} ${mesAno(i.competencia)}</td><td class="num">${i.usos}</td>
+    <td><button class="discreto" data-hom="${i.id}">Homologar</button>
+     <button class="discreto risco" data-rej="${i.id}">Rejeitar</button></td></tr>`).join("")}
+   </tbody></table></div></div>`:""}
+  ${(sobras||[]).length?`<div class="bloco"><h3>Sobras de cota do mês anterior</h3>
+   <p class="nota">A sobra só passa para o mês seguinte com autorização expressa da fiscalização
+    técnica. Não atravessa o encerramento do exercício.</p>
+   <div class="rolagem"><table><thead><tr><th>Unidade</th><th>Competência</th>
+    <th class="num">Sobra</th><th></th></tr></thead><tbody>
+   ${sobras.map(s=>`<tr><td>${esc(s.unidade_nome)}</td><td>${mesAno(s.competencia)}</td>
+    <td class="num">${reais(s.sobra)}</td>
+    <td>${EU.perfil==="FISCAL_TECNICO"
+      ?`<button class="discreto" data-tr="${s.contrato_id}|${s.unidade_id}|${s.competencia}|${s.sobra}">Transpor</button>`
+      :`<span class="valor">só a fiscalização técnica</span>`}</td></tr>`).join("")}
+   </tbody></table></div></div>`:""}`;
 
-    <div class="bloco"><h3>Orçamento</h3>
-      <p class="nota">Itens previstos. Acima de R$ 2.000, somando o que a mesma unidade
-        já orçou na mesma categoria nos últimos 30 dias, o chamado vai para autorização.</p>
-      <div id="tabPrev">${linhasInsumo(previstos,"previsto",podeOrcar)}</div>
-      ${podeOrcar?`<div class="grade-insumo" style="margin-top:1rem">
-        <div class="campo"><label for="iCod">Código</label><input id="iCod"></div>
-        <div class="campo"><label for="iDesc">Descrição</label><input id="iDesc"></div>
-        <div class="campo"><label for="iUn">Un.</label><input id="iUn" value="un"></div>
-        <div class="campo"><label for="iQtd">Qtd</label><input id="iQtd" type="number" step="0.01" min="0.01"></div>
-        <div class="campo"><label for="iVal">Unitário</label><input id="iVal" type="number" step="0.01" min="0"></div>
-        <div class="campo"><label>&nbsp;</label><button class="discreto" id="btnAddPrev">Incluir</button></div>
-      </div>
-      <div class="campo"><label for="iTab">Tabela de referência</label>
-        <select id="iTab">${TABELAS.map(t=>`<option value="${t.id}">${esc(t.nome)} · ${soData(t.competencia)}</option>`).join("")}</select>
-        <p class="ajuda">Código que não existir nessa tabela é cadastrado como pendente de homologação da fiscalização.</p></div>
-      <button class="principal" id="btnOrcar">Enviar orçamento</button>`:""}
-    </div>
+ document.querySelectorAll("[data-aut]").forEach(b=>b.onclick=()=>decidir(Number(b.dataset.aut),true));
+ document.querySelectorAll("[data-rec]").forEach(b=>b.onclick=()=>decidir(Number(b.dataset.rec),false));
+ document.querySelectorAll("[data-hom]").forEach(b=>b.onclick=()=>homologar(Number(b.dataset.hom),true));
+ document.querySelectorAll("[data-rej]").forEach(b=>b.onclick=()=>homologar(Number(b.dataset.rej),false));
+ document.querySelectorAll("#painelFisc .chamado[data-id]").forEach(b=>
+  b.onclick=()=>telaDetalheFiscal(Number(b.dataset.id)));
+ document.querySelectorAll("[data-tr]").forEach(b=>b.onclick=async()=>{
+  const [ct,un,comp,val]=b.dataset.tr.split("|");
+  const {error}=await sb.rpc("autorizar_transposicao",
+   {p_contrato:Number(ct),p_unidade:Number(un),p_de:comp,p_valor:Number(val)});
+  if(error)return recado("avisoFisc",traduzir(error.message),"erro");
+  await telaFiscal(); recado("avisoFisc","Transposição autorizada.","bom");});
 
-    ${podeIniciar?`<div class="bloco"><h3>Iniciar execução</h3>
-      ${c.status==="RECEBIDO"&&c.nivel_codigo==="EMERGENCIA"?
-        `<p class="nota">Emergência: você pode executar antes de orçar. O orçamento
-          passa a ser obrigatório para encerrar, e se cruzar a alçada vai para ratificação.</p>`:""}
-      <div class="par">
-        <div class="campo"><label class="obrig" for="fMao">Mão de obra</label>
-          <select id="fMao"><option value="FIXA">Fixa</option><option value="EVENTUAL">Eventual</option></select></div>
-        <div class="campo"><label for="fFunc">Funcionário</label>
-          <select id="fFunc"><option value="">Escolha…</option>
-          ${FUNCIONARIOS.map(f=>`<option value="${f.id}">${esc(f.nome)} — ${esc(f.funcao)}</option>`).join("")}</select>
-          <p class="ajuda">Obrigatório quando a mão de obra é fixa.</p></div>
-      </div>
-      <button class="principal" id="btnIniciar">Iniciar execução</button></div>`:""}
+ async function decidir(id,ok){
+  const just=$("just"+id)?.value.trim()||null;
+  if(!ok&&(!just||just.length<10))
+   return recado("avisoFisc","A recusa exige justificativa com pelo menos 10 caracteres.","erro");
+  const {error}=await sb.rpc("decidir_alcada",{p_chamado:id,p_autorizar:ok,p_justificativa:just});
+  if(error)return recado("avisoFisc",traduzir(error.message),"erro");
+  await telaFiscal();
+  recado("avisoFisc",ok?"Chamado autorizado. A empresa pode iniciar."
+                      :"Chamado recusado. O valor voltou ao saldo.","bom");}
+ async function homologar(id,ok){
+  const {error}=await sb.rpc("homologar_item",{p_item:id,p_aprovar:ok});
+  if(error)return recado("avisoFisc",traduzir(error.message),"erro");
+  await telaFiscal();
+  recado("avisoFisc",ok?"Preço homologado. Passa a valer como referência."
+                      :"Preço rejeitado. Não vira referência.","bom");}}
 
-    ${emExecucao?`<div class="bloco"><h3>Prestação de contas</h3>
-      <p class="nota">Feche a lista do que foi realmente aplicado, envie a foto do
-        depois e informe o tempo gasto.</p>
-      <div id="tabExec">${linhasInsumo(executados,"executado",true)}</div>
-      <div class="grade-insumo" style="margin-top:1rem">
-        <div class="campo"><label for="eCod">Código</label><input id="eCod"></div>
-        <div class="campo"><label for="eDesc">Descrição</label><input id="eDesc"></div>
-        <div class="campo"><label for="eUn">Un.</label><input id="eUn" value="un"></div>
-        <div class="campo"><label for="eQtd">Qtd</label><input id="eQtd" type="number" step="0.01" min="0.01"></div>
-        <div class="campo"><label for="eVal">Unitário</label><input id="eVal" type="number" step="0.01" min="0"></div>
-        <div class="campo"><label>&nbsp;</label><button class="discreto" id="btnAddExec">Incluir</button></div>
-      </div>
-      <div class="par">
-        <div class="campo"><label class="obrig" for="fFotoDep">Foto do depois</label>
-          <input id="fFotoDep" type="file" accept="image/*" capture="environment"></div>
-        <div class="campo"><label class="obrig" for="fHoras">Tempo de execução (horas)</label>
-          <input id="fHoras" type="number" step="0.5" min="0.5"></div>
-      </div>
-      <button class="principal" id="btnEncerrar">Registrar atendimento</button></div>`:""}
+async function painelChamados(){
+ const {data,error}=await sb.from("v_chamado_gestao").select("*");
+ if(error)return recado("avisoFisc",traduzir(error.message),"erro");
+ const lista=(data||[]).sort((a,b)=>a.nivel_ordem-b.nivel_ordem||
+  (new Date(a.prazo_limite||8e15)-new Date(b.prazo_limite||8e15)));
+ const unidades=[...new Set(lista.map(c=>c.unidade_nome))].sort();
+ $("painelFisc").innerHTML=`<div class="barra">
+   <select id="fUni" style="width:auto"><option value="">Todas as unidades</option>
+    ${unidades.map(u=>`<option>${esc(u)}</option>`).join("")}</select>
+   <select id="fSt" style="width:auto"><option value="">Todos os status</option>
+    ${Object.entries(NOME_STATUS).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select>
+   <span class="espaco"></span><span class="valor" id="cont"></span></div>
+  <div id="listaFisc"></div>`;
+ function pintar(){
+  const u=$("fUni").value,s=$("fSt").value;
+  const f=lista.filter(c=>(!u||c.unidade_nome===u)&&(!s||c.status===s));
+  $("cont").textContent=`${f.length} chamado${f.length===1?"":"s"}`;
+  $("listaFisc").innerHTML=f.length?f.map(c=>{const p=estadoPrazo(c);
+   return `<button class="chamado ${p.classe}" data-id="${c.id}">
+    <span class="linha1"><span class="num">nº ${c.numero}</span><span class="tit">${esc(c.tipo_servico)}</span></span>
+    <span class="linha2">${esc(c.unidade_nome)} · ${esc(c.setor_especifico)}</span>
+    <span class="linha3"><span class="nivel ${classeNivel(c.nivel_ordem)}">${esc(c.nivel_nome)}</span>
+     <span class="estado">${esc(NOME_STATUS[c.status]||c.status)}</span>
+     ${p.texto?`<span class="prazo ${p.classe}">${p.texto}</span>`:""}
+     <span class="valor">${reais(c.total_executado>0?c.total_executado:c.total_previsto)}</span>
+    </span></button>`;}).join(""):`<p class="vazio">Nenhum chamado com esses filtros.</p>`;
+  document.querySelectorAll("#listaFisc .chamado").forEach(b=>
+   b.onclick=()=>telaDetalheFiscal(Number(b.dataset.id)));}
+ $("fUni").onchange=pintar; $("fSt").onchange=pintar; pintar();}
 
-    <div class="bloco"><h3>Andamento</h3><ul class="linha-tempo">
-      ${(tl||[]).map(t=>`<li><p class="quando">${dataHora(t.criado_em)} · ${esc(t.responsavel)}</p>
-        <p class="oque">${esc(NOME_STATUS[t.status_novo]||t.status_novo)}</p>
-        ${t.observacao?`<p class="obs">${esc(t.observacao)}</p>`:""}</li>`).join("")||
-        `<li><p class="obs">Sem registros.</p></li>`}</ul></div>`;
+async function painelCotas(){
+ const [{data:saldo},{data:cotas}]=await Promise.all([
+  sb.from("v_saldo_painel").select("*"),
+  sb.from("v_cota_painel").select("*").order("competencia",{ascending:false}).order("unidade_nome")]);
+ const s=(saldo||[])[0];
+ $("painelFisc").innerHTML=`
+  ${s?`<div class="bloco"><h3>Contrato ${esc(s.numero)} · ${esc(s.razao_social)}</h3>
+   <p class="nota">Vigência de ${soData(s.vigencia_inicio)} a ${soData(s.vigencia_fim)} ·
+    garantia de ${s.prazo_garantia_dias} dias.</p>
+   <div class="tres">
+    <div><p class="rot">Valor do contrato</p><p class="cifra">${reais(s.valor_base)}</p></div>
+    <div><p class="rot">Provisionado</p><p class="cifra">${reais(s.provisionado)}</p></div>
+    <div><p class="rot">Liquidado</p><p class="cifra">${reais(s.liquidado)}</p></div>
+    <div><p class="rot">Disponível</p><p class="cifra">${reais(s.disponivel)}</p></div></div>
+   </div>`:`<div class="bloco"><h3>Sem contrato ativo</h3>
+    <p class="nota">Nenhum contrato vigente cadastrado, ou seu perfil não tem acesso ao saldo.</p></div>`}
+  <div class="bloco"><h3>Cotas por unidade</h3>
+   <p class="nota">Unidade sem cota atribuída não aparece aqui: ela consome direto o saldo global.</p>
+   ${(cotas||[]).length?`<div class="rolagem"><table><thead><tr><th>Unidade</th><th>Competência</th>
+    <th class="num">Cota</th><th class="num">Transposto</th><th class="num">Provisionado</th>
+    <th class="num">Liquidado</th><th class="num">Disponível</th></tr></thead><tbody>
+   ${cotas.map(c=>`<tr><td>${esc(c.unidade_nome)}</td><td>${mesAno(c.competencia)}</td>
+    <td class="num">${reais(c.valor_cota)}</td><td class="num">${reais(c.valor_transposto)}</td>
+    <td class="num">${reais(c.provisionado)}</td><td class="num">${reais(c.liquidado)}</td>
+    <td class="num">${reais(c.disponivel)}</td></tr>`).join("")}</tbody></table></div>`
+   :`<p class="vazio">Nenhuma cota mensal atribuída. Todas as unidades operam contra o saldo global.</p>`}
+  </div>`;}
 
-  document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=async()=>{
-    const {error}=await sb.from("chamado_insumo").delete().eq("id",Number(b.dataset.rm));
-    if(error) return recado("avisoDet",traduzir(error.message),"erro");
-    telaDetalheEmpresa(id);
-  });
+async function telaDetalheFiscal(id){
+ $("conteudo").innerHTML=`<div class="barra"><button class="discreto" id="btnVoltar">Voltar</button>
+  <h2>Chamado</h2></div><div id="avisoDet"></div><div id="corpoDet"><p class="vazio">Carregando…</p></div>`;
+ $("btnVoltar").onclick=telaFiscal;
+ const [{data:c,error:e1},{data:tl},{data:ins},{data:aut}]=await Promise.all([
+  sb.from("v_chamado_gestao").select("*").eq("id",id).single(),
+  sb.from("v_timeline").select("*").eq("chamado_id",id).order("criado_em"),
+  sb.from("v_insumo").select("*").eq("chamado_id",id).order("id"),
+  sb.from("chamado_autorizacao").select("*").eq("chamado_id",id).order("decidido_em")]);
+ if(e1||!c)return recado("avisoDet","Chamado não encontrado.","erro");
+ const p=estadoPrazo(c), imgs=await galeria(id);
+ const prev=(ins||[]).filter(i=>i.fase==="PREVISTO"), exec=(ins||[]).filter(i=>i.fase==="EXECUTADO");
+ $("corpoDet").innerHTML=`<div class="bloco">
+  <div class="barra"><h3>nº ${c.numero} · ${esc(c.tipo_servico)}</h3><span class="espaco"></span>
+   <span class="nivel ${classeNivel(c.nivel_ordem)}">${esc(c.nivel_nome)}</span>
+   <span class="estado">${esc(NOME_STATUS[c.status]||c.status)}</span>
+   ${p.texto?`<span class="prazo ${p.classe}">${p.texto}</span>`:""}</div>
+  <div class="par"><div>
+   <div class="dado"><p class="rot">Unidade</p><p class="val">${esc(c.unidade_nome)}</p></div>
+   <div class="dado"><p class="rot">Prédio</p><p class="val">${esc(c.predio||"não definido")}</p></div>
+   <div class="dado"><p class="rot">Local exato</p><p class="val">${esc(c.setor_especifico)}</p></div>
+   <div class="dado"><p class="rot">Categoria</p><p class="val">${esc(c.categoria)}</p></div></div>
+  <div><div class="dado"><p class="rot">Aberto em</p><p class="val">${dataHora(c.aberto_em)}</p></div>
+   <div class="dado"><p class="rot">Prazo</p><p class="val">${dataHora(c.prazo_limite)}</p></div>
+   <div class="dado"><p class="rot">Solicitante</p><p class="val">${esc(c.aberto_por_nome||"—")}</p></div>
+   ${c.funcionario_nome?`<div class="dado"><p class="rot">Executante</p><p class="val">${esc(c.funcionario_nome)}</p></div>`:""}
+   ${c.tempo_execucao_horas?`<div class="dado"><p class="rot">Tempo de execução</p>
+     <p class="val">${c.tempo_execucao_horas} h</p></div>`:""}</div></div>
+  <div class="dado"><p class="rot">Descrição</p><p class="val">${esc(c.descricao)}</p></div>
+  ${c.execucao_emergencial?`<div class="recado atencao">Execução emergencial: o serviço foi
+    iniciado antes do orçamento, por conta do nível de urgência.</div>`:""}</div>
+  ${imgs.length?`<div class="bloco"><h3>Registro fotográfico</h3><div class="par">${imgs.join("")}</div></div>`:""}
+  <div class="bloco"><h3>Orçado</h3>${tabelaInsumo(prev,"previsto",false)}</div>
+  ${exec.length?`<div class="bloco"><h3>Executado</h3>${tabelaInsumo(exec,"executado",false)}</div>`:""}
+  ${(aut||[]).length?`<div class="bloco"><h3>Decisões de alçada</h3><div class="rolagem"><table>
+   <thead><tr><th>Decisão</th><th class="num">Chamado</th><th class="num">Agregado 30d</th>
+    <th>Quando</th><th>Justificativa</th></tr></thead><tbody>
+   ${aut.map(a=>`<tr><td>${a.decisao==="AUTORIZADO"?"Autorizado":"Recusado"}${a.ratificacao?" (ratificação)":""}</td>
+    <td class="num">${reais(a.valor_chamado)}</td><td class="num">${reais(a.valor_agregado_30d)}</td>
+    <td>${dataHora(a.decidido_em)}</td><td>${esc(a.justificativa||"—")}</td></tr>`).join("")}
+   </tbody></table></div></div>`:""}
+  ${htmlTimeline(tl)}`;}
 
-  async function incluir(pref,fase){
-    const cod=$(pref+"Cod").value.trim(), desc=$(pref+"Desc").value.trim();
-    const un=$(pref+"Un").value.trim()||"un";
-    const qtd=Number($(pref+"Qtd").value), val=Number($(pref+"Val").value);
-    if(!cod||!desc) return recado("avisoDet","Informe código e descrição do item.","erro");
-    if(!(qtd>0)) return recado("avisoDet","A quantidade precisa ser maior que zero.","erro");
-    if(!(val>=0)) return recado("avisoDet","Informe o valor unitário.","erro");
-    let itemId=null;
-    const tab=Number($("iTab")?.value)||TABELAS[0]?.id;
-    if(tab){
-      const {data:achado}=await sb.from("item_referencia").select("id")
-        .eq("tabela_referencia_id",tab).eq("codigo",cod).maybeSingle();
-      if(achado) itemId=achado.id;
-      else{
-        const {data:novo,error:eN}=await sb.from("item_referencia").insert({
-          tabela_referencia_id:tab,codigo:cod,descricao:desc,unidade_medida:un,
-          valor_unitario:val,status:"PENDENTE_HOMOLOGACAO",criado_por:EU.id
-        }).select("id").single();
-        if(eN) return recado("avisoDet",traduzir(eN.message),"erro");
-        itemId=novo.id;
-      }
-    }
-    const {error}=await sb.from("chamado_insumo").insert({chamado_id:id,fase,
-      item_referencia_id:itemId,codigo_snapshot:cod,descricao_snapshot:desc,
-      unidade_medida_snapshot:un,valor_unitario_snapshot:val,quantidade:qtd,
-      lancado_por:EU.id});
-    if(error) return recado("avisoDet",traduzir(error.message),"erro");
-    telaDetalheEmpresa(id);
-  }
-  if($("btnAddPrev")) $("btnAddPrev").onclick=()=>incluir("i","PREVISTO");
-  if($("btnAddExec")) $("btnAddExec").onclick=()=>incluir("e","EXECUTADO");
-
-  if($("btnOrcar")) $("btnOrcar").onclick=async()=>{
-    const b=$("btnOrcar"); b.disabled=true; b.textContent="Enviando…";
-    const {data,error}=await sb.rpc("enviar_orcamento",{p_chamado:id});
-    b.disabled=false; b.textContent="Enviar orçamento";
-    if(error) return recado("avisoDet",traduzir(error.message),"erro");
-    const msg={AUTORIZADO:"Orçamento aprovado automaticamente. Pode iniciar a execução.",
-      AGUARDANDO_AUTORIZACAO:"Orçamento acima da alçada. Enviado para autorização da fiscalização.",
-      BLOQUEADO_SEM_SALDO:"Não há saldo disponível. A gestão do contrato foi avisada.",
-      EM_EXECUCAO:"Orçamento posterior registrado.",
-      EM_EXECUCAO_AGUARDANDO_RATIFICACAO:"Orçamento registrado. A execução emergencial aguarda ratificação."}[data]||data;
-    await telaDetalheEmpresa(id);
-    recado("avisoDet",msg, data==="BLOQUEADO_SEM_SALDO"?"atencao":"bom");
-  };
-
-  if($("btnIniciar")) $("btnIniciar").onclick=async()=>{
-    const mao=$("fMao").value, func=Number($("fFunc").value)||null;
-    if(mao==="FIXA"&&!func) return recado("avisoDet","Mão de obra fixa exige a indicação do funcionário.","erro");
-    const b=$("btnIniciar"); b.disabled=true; b.textContent="Iniciando…";
-    const {error}=await sb.rpc("iniciar_execucao",{p_chamado:id,p_mao_obra:mao,p_funcionario:func});
-    b.disabled=false; b.textContent="Iniciar execução";
-    if(error) return recado("avisoDet",traduzir(error.message),"erro");
-    await telaDetalheEmpresa(id);
-    recado("avisoDet","Execução iniciada.","bom");
-  };
-
-  if($("btnEncerrar")) $("btnEncerrar").onclick=async()=>{
-    const horas=Number($("fHoras").value), arq=$("fFotoDep").files[0];
-    if(!(horas>0)) return recado("avisoDet","Informe o tempo de execução em horas.","erro");
-    const temFoto=(fotos||[]).some(f=>f.momento==="DEPOIS"&&f.rodada===RODADA);
-    if(!temFoto&&!arq) return recado("avisoDet","A foto do depois é obrigatória.","erro");
-    const b=$("btnEncerrar"); b.disabled=true; b.textContent="Registrando…";
-    try{ if(arq){ b.textContent="Enviando foto…"; await enviarFoto(id,arq,"DEPOIS",RODADA); } }
-    catch(e){ b.disabled=false; b.textContent="Registrar atendimento";
-              return recado("avisoDet",traduzir(e.message),"erro"); }
-    const {error}=await sb.rpc("registrar_atendimento",{p_chamado:id,p_horas:horas});
-    b.disabled=false; b.textContent="Registrar atendimento";
-    if(error) return recado("avisoDet",traduzir(error.message),"erro");
-    await telaEmpresa();
-    recado("avisoEmp","Atendimento registrado. A unidade foi avisada para validar.","bom");
-  };
-}
-
-/* ================================================================
-   PERFIS AINDA SEM TELA
-================================================================ */
+/* ================= ENTRADA ================= */
 function telaPendente(){
-  $("conteudo").innerHTML=`<div class="bloco"><h3>Tela ainda não construída</h3>
-    <p class="nota">Seu acesso funciona e suas permissões estão ativas, mas a tela
-      deste perfil entra nas próximas partes.</p>
-    <table><tbody>
-      <tr><td>Autorizar, controlar cota e emitir relatório</td><td>fiscalização</td></tr>
-      <tr><td>Parâmetros, feriados e tabela de preços</td><td>PROAD</td></tr>
-    </tbody></table></div>`;
-}
+ $("conteudo").innerHTML=`<div class="bloco"><h3>Tela ainda não construída</h3>
+  <p class="nota">Seu acesso funciona, mas a tela deste perfil entra na próxima parte:
+   parâmetros, feriados, cadastros e carga da tabela de preços.</p></div>`;}
 
-/* ================================================================
-   ENTRADA
-================================================================ */
 async function abrirApp(p){
-  EU=p; $("entrada").style.display="none"; $("app").style.display="flex";
-  $("tNome").textContent=p.nome_completo;
-  $("tPerfil").textContent=NOME_PERFIL[p.perfil]||p.perfil;
-  $("tVinculo").textContent=p.unidade_nome
-    ? p.unidade_nome+(p.predio_nome?" · "+p.predio_nome:"") : (p.empresa_nome||"");
-  if(p.perfil==="DEMANDANTE"){ await carregarCatalogos(); await telaLista(); }
-  else if(p.perfil==="EMPRESA"){ await carregarEmpresa(); await telaEmpresa(); }
-  else telaPendente();
-}
+ EU=p; $("entrada").style.display="none"; $("app").style.display="flex";
+ $("tNome").textContent=p.nome_completo;
+ $("tPerfil").textContent=NOME_PERFIL[p.perfil]||p.perfil;
+ $("tVinculo").textContent=p.unidade_nome?p.unidade_nome+(p.predio_nome?" · "+p.predio_nome:""):(p.empresa_nome||"");
+ if(p.perfil==="DEMANDANTE"){await carregarCatalogos();await telaLista();}
+ else if(p.perfil==="EMPRESA"){await carregarEmpresa();await telaEmpresa();}
+ else if(["ADMIN","GESTOR_CONTRATO","FISCAL_ADM","FISCAL_TECNICO","FISCAL_SETORIAL"].includes(p.perfil))
+  await telaFiscal();
+ else telaPendente();}
 async function carregarPerfil(){
-  const {data:{user}}=await sb.auth.getUser();
-  if(!user) return null;
-  const {data}=await sb.from("v_meu_perfil").select("*").eq("id",user.id).single();
-  return data||null;
-}
+ const {data:{user}}=await sb.auth.getUser(); if(!user)return null;
+ const {data}=await sb.from("v_meu_perfil").select("*").eq("id",user.id).single();
+ return data||null;}
 async function seguir(){
-  const p=await carregarPerfil();
-  if(!p){ recado("avisoLogin","Seu login funcionou, mas você ainda não tem perfil cadastrado. Procure a PROAD.","erro");
-          await sb.auth.signOut(); return; }
-  if(!p.ativo){ recado("avisoLogin","Seu acesso está desativado. Procure a PROAD.","erro");
-                await sb.auth.signOut(); return; }
-  if(p.precisa_trocar_senha){ $("telaLogin").style.display="none";
-    $("telaTroca").style.display="block"; $("nova1").focus(); return; }
-  await abrirApp(p);
-}
+ const p=await carregarPerfil();
+ if(!p){recado("avisoLogin","Seu login funcionou, mas você ainda não tem perfil cadastrado. Procure a PROAD.","erro");
+  await sb.auth.signOut();return;}
+ if(!p.ativo){recado("avisoLogin","Seu acesso está desativado. Procure a PROAD.","erro");
+  await sb.auth.signOut();return;}
+ if(p.precisa_trocar_senha){$("telaLogin").style.display="none";
+  $("telaTroca").style.display="block";$("nova1").focus();return;}
+ await abrirApp(p);}
 $("btnEntrar").onclick=async()=>{
-  recado("avisoLogin","");
-  const b=$("btnEntrar"); b.disabled=true; b.textContent="Entrando…";
-  const {error}=await sb.auth.signInWithPassword({
-    email:$("email").value.trim(),password:$("senha").value});
-  b.disabled=false; b.textContent="Entrar";
-  if(error) return recado("avisoLogin",traduzir(error.message),"erro");
-  await seguir();
-};
-$("senha").addEventListener("keydown",e=>{ if(e.key==="Enter") $("btnEntrar").click(); });
+ recado("avisoLogin",""); const b=$("btnEntrar");b.disabled=true;b.textContent="Entrando…";
+ const {error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("senha").value});
+ b.disabled=false;b.textContent="Entrar";
+ if(error)return recado("avisoLogin",traduzir(error.message),"erro");
+ await seguir();};
+$("senha").addEventListener("keydown",e=>{if(e.key==="Enter")$("btnEntrar").click();});
 $("btnTrocar").onclick=async()=>{
-  recado("avisoTroca","");
-  const a=$("nova1").value,b2=$("nova2").value;
-  if(a.length<8) return recado("avisoTroca","A senha precisa ter pelo menos 8 caracteres.","erro");
-  if(a!==b2) return recado("avisoTroca","As duas senhas não são iguais.","erro");
-  const bt=$("btnTrocar"); bt.disabled=true; bt.textContent="Salvando…";
-  const {error}=await sb.auth.updateUser({password:a});
-  if(error){ bt.disabled=false; bt.textContent="Salvar senha";
-             return recado("avisoTroca",traduzir(error.message),"erro"); }
-  const {error:e2}=await sb.rpc("marcar_senha_trocada");
-  bt.disabled=false; bt.textContent="Salvar senha";
-  if(e2) return recado("avisoTroca",traduzir(e2.message),"erro");
-  $("telaTroca").style.display="none"; $("telaLogin").style.display="block";
-  await abrirApp(await carregarPerfil());
-};
-$("btnSair").onclick=async()=>{ await sb.auth.signOut(); location.reload(); };
-(async()=>{ const {data:{session}}=await sb.auth.getSession(); if(session) await seguir(); })();
+ recado("avisoTroca",""); const a=$("nova1").value,b2=$("nova2").value;
+ if(a.length<8)return recado("avisoTroca","A senha precisa ter pelo menos 8 caracteres.","erro");
+ if(a!==b2)return recado("avisoTroca","As duas senhas não são iguais.","erro");
+ const bt=$("btnTrocar");bt.disabled=true;bt.textContent="Salvando…";
+ const {error}=await sb.auth.updateUser({password:a});
+ if(error){bt.disabled=false;bt.textContent="Salvar senha";return recado("avisoTroca",traduzir(error.message),"erro");}
+ const {error:e2}=await sb.rpc("marcar_senha_trocada");
+ bt.disabled=false;bt.textContent="Salvar senha";
+ if(e2)return recado("avisoTroca",traduzir(e2.message),"erro");
+ $("telaTroca").style.display="none";$("telaLogin").style.display="block";
+ await abrirApp(await carregarPerfil());};
+$("btnSair").onclick=async()=>{await sb.auth.signOut();location.reload();};
+(async()=>{const {data:{session}}=await sb.auth.getSession(); if(session)await seguir();})();
 </script>
 </body>
 </html>
