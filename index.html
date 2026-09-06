@@ -19,9 +19,7 @@ body{background:var(--papel);color:var(--tinta);
 h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.01em}
 p{margin:0}
 button,input,select,textarea{font:inherit;color:inherit}
-a{color:var(--acao)}
 
-/* ---------- entrada ---------- */
 #entrada{min-height:100vh;display:grid;grid-template-columns:1fr}
 @media (min-width:900px){#entrada{grid-template-columns:5fr 4fr}}
 .marca{background:var(--tinta);color:var(--papel);padding:2.5rem 2rem;
@@ -54,13 +52,13 @@ button.principal:focus-visible{outline:2px solid var(--tinta);outline-offset:2px
 button.discreto{background:none;border:1px solid var(--linha);border-radius:var(--raio);
   padding:.45rem .9rem;cursor:pointer;color:var(--tinta)}
 button.discreto:hover{border-color:var(--tinta-fraca)}
+button.risco{border-color:#DFC0B7;color:var(--alerta)}
 
 .recado{padding:.7rem .8rem;border-radius:var(--raio);font-size:.9rem;margin-bottom:1.1rem}
 .recado.erro{background:#F6E4E0;color:var(--alerta);border:1px solid #E2BDB4}
 .recado.bom{background:#E2EFE8;color:var(--ok);border:1px solid #B9D6C6}
 .recado.atencao{background:#F5EEDC;color:var(--risco);border:1px solid #DFCFA6}
 
-/* ---------- área interna ---------- */
 #app{display:none;min-height:100vh;flex-direction:column}
 .topo{background:var(--tinta);color:var(--papel);padding:.85rem 1.25rem;
   display:flex;gap:.9rem;align-items:center;flex-wrap:wrap}
@@ -73,17 +71,25 @@ button.discreto:hover{border-color:var(--tinta-fraca)}
 .selo{display:inline-block;border:1px solid #35525B;border-radius:2rem;
   padding:.1rem .6rem;font-size:.8rem;color:#C6DADF}
 
-main{padding:1.5rem 1.25rem;max-width:56rem;width:100%;margin:0 auto}
+main{padding:1.5rem 1.25rem;max-width:60rem;width:100%;margin:0 auto}
 .barra{display:flex;gap:.6rem;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap}
 .barra h2{font-size:1.25rem}
 .barra .espaco{flex:1}
-
 .bloco{background:var(--campo);border:1px solid var(--linha);
   border-radius:var(--raio);padding:1.25rem;margin-bottom:1rem}
 .bloco h3{font-size:1rem;margin-bottom:.25rem}
 .bloco .nota{color:var(--tinta-fraca);font-size:.9rem;margin-bottom:1rem}
 
-/* cartão de chamado */
+/* abas por prédio */
+.abas{display:flex;gap:.3rem;flex-wrap:wrap;border-bottom:1px solid var(--linha);
+  margin-bottom:1rem;padding-bottom:.5rem}
+.abas button{background:none;border:1px solid transparent;border-radius:var(--raio);
+  padding:.35rem .7rem;cursor:pointer;font-size:.92rem;color:var(--tinta-fraca)}
+.abas button:hover{border-color:var(--linha)}
+.abas button[aria-selected="true"]{background:var(--tinta);color:var(--papel);
+  border-color:var(--tinta);font-weight:500}
+.abas .contagem{font-variant-numeric:tabular-nums;opacity:.75;margin-left:.3rem}
+
 .chamado{background:var(--campo);border:1px solid var(--linha);border-radius:var(--raio);
   padding:1rem 1.1rem;margin-bottom:.7rem;cursor:pointer;display:block;width:100%;
   text-align:left;border-left-width:4px}
@@ -95,30 +101,28 @@ main{padding:1.5rem 1.25rem;max-width:56rem;width:100%;margin:0 auto}
 .chamado .linha2{color:var(--tinta-fraca);font-size:.9rem;margin-top:.2rem}
 .chamado .linha3{margin-top:.55rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
 
-/* o prazo é a única cor forte da interface */
 .prazo{font-size:.85rem;font-weight:600;padding:.1rem .5rem;border-radius:2rem;
   border:1px solid currentColor;font-variant-numeric:tabular-nums}
-.prazo.folgado{color:var(--ok)}
-.prazo.apertado{color:var(--risco)}
+.prazo.folgado{color:var(--ok)} .prazo.apertado{color:var(--risco)}
 .prazo.vencido{color:var(--alerta)}
 .chamado.folgado{border-left-color:var(--ok)}
 .chamado.apertado{border-left-color:var(--risco)}
 .chamado.vencido{border-left-color:var(--alerta)}
 .chamado.neutro{border-left-color:var(--linha)}
-
 .estado{font-size:.85rem;color:var(--tinta-fraca);border:1px solid var(--linha);
   border-radius:2rem;padding:.1rem .55rem}
+.nivel{font-size:.85rem;font-weight:600;border-radius:2rem;padding:.1rem .55rem;
+  border:1px solid currentColor}
+.nivel.critico{color:var(--alerta)} .nivel.alto{color:var(--risco)}
+.nivel.comum{color:var(--tinta-fraca)}
 .pendencia{font-size:.85rem;color:var(--risco);font-weight:600}
 
-/* timeline */
-.linha-tempo{list-style:none;margin:0;padding:0;border-left:2px solid var(--linha);
-  margin-left:.4rem}
+.linha-tempo{list-style:none;margin:0;padding:0;border-left:2px solid var(--linha);margin-left:.4rem}
 .linha-tempo li{position:relative;padding:0 0 1.1rem 1.2rem}
 .linha-tempo li::before{content:"";position:absolute;left:-.42rem;top:.42rem;
   width:.7rem;height:.7rem;border-radius:50%;background:var(--acao)}
 .linha-tempo li:last-child{padding-bottom:0}
-.linha-tempo .quando{font-size:.85rem;color:var(--tinta-fraca);
-  font-variant-numeric:tabular-nums}
+.linha-tempo .quando{font-size:.85rem;color:var(--tinta-fraca);font-variant-numeric:tabular-nums}
 .linha-tempo .oque{font-weight:600}
 .linha-tempo .obs{font-size:.9rem;color:var(--tinta-fraca)}
 
@@ -128,71 +132,66 @@ main{padding:1.5rem 1.25rem;max-width:56rem;width:100%;margin:0 auto}
 .dado .rot{font-size:.85rem;color:var(--tinta-fraca)}
 .dado .val{font-weight:500}
 img.foto{max-width:100%;border:1px solid var(--linha);border-radius:var(--raio)}
-
 .vazio{text-align:center;padding:2.5rem 1rem;color:var(--tinta-fraca)}
-.nota-nova{border:1px dashed var(--linha);border-radius:var(--raio);padding:.9rem;
-  display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem}
 
+table{width:100%;border-collapse:collapse;font-size:.93rem}
+th,td{text-align:left;padding:.5rem .4rem;border-bottom:1px solid var(--linha)}
+th{font-weight:600;color:var(--tinta-fraca);font-size:.85rem}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:none}
+tfoot td{font-weight:600;border-top:2px solid var(--linha);border-bottom:none}
+
+.grade-insumo{display:grid;gap:.6rem;grid-template-columns:1fr;margin-bottom:.8rem}
+@media (min-width:760px){.grade-insumo{grid-template-columns:1fr 2.4fr .8fr 1fr 1fr auto}}
+.grade-insumo .campo{margin:0}
 .escala{display:flex;gap:.4rem;flex-wrap:wrap}
 .escala button{flex:1;min-width:5.5rem;padding:.55rem .3rem;background:var(--campo);
   border:1px solid var(--linha);border-radius:var(--raio);cursor:pointer;font-size:.9rem}
-.escala button[aria-pressed="true"]{background:var(--tinta);color:var(--papel);
-  border-color:var(--tinta)}
+.escala button[aria-pressed="true"]{background:var(--tinta);color:var(--papel);border-color:var(--tinta)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 
-<!-- ===================================================================
-     CONFIGURAÇÃO
-     A chave abaixo é a anon public: feita para ficar visível no
-     navegador. Quem a torna inofensiva é a RLS. A service_role nunca
-     entra neste arquivo.
-=================================================================== -->
+<!-- Chave anon public: feita para ficar visível. Quem a torna inofensiva
+     é a RLS. A service_role nunca entra neste arquivo. -->
 <script>
 const SUPABASE_URL  = "https://jdprmwoqqbiwtgvcuxrh.supabase.co";
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkcHJtd29xcWJpd3RndmN1eHJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1Njk5NzMsImV4cCI6MjEwNDE0NTk3M30.yKFSBsXjLxAPCfokEv6XIyEYyVW2GrqlJlaqCpOOWXA";
 </script>
 
-<!-- =============================== ENTRADA =============================== -->
 <section id="entrada">
   <div class="marca">
-    <div>
-      <h1>Manutenção predial da UERN</h1>
+    <div><h1>Manutenção predial da UERN</h1>
       <p class="sub">Abertura e acompanhamento de chamados de manutenção nas
-         unidades da universidade, com prazo, orçamento e histórico de cada serviço.</p>
-    </div>
+         unidades da universidade, com prazo, orçamento e histórico de cada serviço.</p></div>
     <p class="rodape">Acesso restrito a servidores cadastrados e à empresa contratada.
        Para obter acesso, procure a PROAD.</p>
   </div>
-  <div class="acesso">
-    <div class="interno">
-      <div id="telaLogin">
-        <h2>Entrar</h2>
-        <p class="dica">Use o e-mail institucional cadastrado pela PROAD.</p>
-        <div id="avisoLogin"></div>
-        <div class="campo"><label for="email">E-mail</label>
-          <input id="email" type="email" autocomplete="username" autofocus></div>
-        <div class="campo"><label for="senha">Senha</label>
-          <input id="senha" type="password" autocomplete="current-password"></div>
-        <button class="principal larga" id="btnEntrar">Entrar</button>
-      </div>
-      <div id="telaTroca" style="display:none">
-        <h2>Defina sua senha</h2>
-        <p class="dica">Este é seu primeiro acesso. Escolha uma senha de pelo menos
-           8 caracteres antes de continuar.</p>
-        <div id="avisoTroca"></div>
-        <div class="campo"><label for="nova1">Nova senha</label>
-          <input id="nova1" type="password" autocomplete="new-password"></div>
-        <div class="campo"><label for="nova2">Repita a nova senha</label>
-          <input id="nova2" type="password" autocomplete="new-password"></div>
-        <button class="principal larga" id="btnTrocar">Salvar senha</button>
-      </div>
+  <div class="acesso"><div class="interno">
+    <div id="telaLogin">
+      <h2>Entrar</h2>
+      <p class="dica">Use o e-mail institucional cadastrado pela PROAD.</p>
+      <div id="avisoLogin"></div>
+      <div class="campo"><label for="email">E-mail</label>
+        <input id="email" type="email" autocomplete="username" autofocus></div>
+      <div class="campo"><label for="senha">Senha</label>
+        <input id="senha" type="password" autocomplete="current-password"></div>
+      <button class="principal larga" id="btnEntrar">Entrar</button>
     </div>
-  </div>
+    <div id="telaTroca" style="display:none">
+      <h2>Defina sua senha</h2>
+      <p class="dica">Este é seu primeiro acesso. Escolha uma senha de pelo menos 8 caracteres.</p>
+      <div id="avisoTroca"></div>
+      <div class="campo"><label for="nova1">Nova senha</label>
+        <input id="nova1" type="password" autocomplete="new-password"></div>
+      <div class="campo"><label for="nova2">Repita a nova senha</label>
+        <input id="nova2" type="password" autocomplete="new-password"></div>
+      <button class="principal larga" id="btnTrocar">Salvar senha</button>
+    </div>
+  </div></div>
 </section>
 
-<!-- =============================== ÁREA INTERNA =============================== -->
 <div id="app">
   <header class="topo">
     <span class="nome" id="tNome"></span>
@@ -207,19 +206,16 @@ const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 <script>
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 const $  = id => document.getElementById(id);
-let EU = null;              // perfil do usuário logado
-let CATEGORIAS = [], TIPOS = [], AMBIENTES = [], FRASES = [];
+let EU=null, CATEGORIAS=[], TIPOS=[], AMBIENTES=[], FRASES=[];
+let PREDIOS=[], FUNCIONARIOS=[], TABELAS=[];
+let ABA="TODOS", ORDEM="urgencia";
 
-/* ---------------- utilidades ---------------- */
-const esc = s => String(s ?? "").replace(/[&<>"']/g, c =>
+const esc = s => String(s ?? "").replace(/[&<>"']/g,c=>
   ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-
-function recado(alvo, texto, tipo){
-  const el = $(alvo); if(!el) return;
-  el.innerHTML = texto ? `<div class="recado ${tipo}">${esc(texto)}</div>` : "";
-}
+function recado(alvo,texto,tipo){const el=$(alvo); if(!el)return;
+  el.innerHTML = texto?`<div class="recado ${tipo}">${esc(texto)}</div>`:"";}
 function traduzir(msg){
-  const m = (msg||"").toLowerCase();
+  const m=(msg||"").toLowerCase();
   if(m.includes("invalid login")) return "E-mail ou senha não conferem.";
   if(m.includes("email not confirmed")) return "Cadastro ainda não confirmado. Procure a PROAD.";
   if(m.includes("rate limit")||m.includes("too many")) return "Muitas tentativas seguidas. Espere um minuto.";
@@ -228,162 +224,140 @@ function traduzir(msg){
   if(m.includes("row-level security")) return "Você não tem permissão para esta ação.";
   if(m.includes("duplicate key")&&m.includes("sha256"))
     return "Esta mesma foto já foi enviada em outro chamado. Tire uma foto nova do local.";
-  return msg || "Não foi possível concluir.";
+  return msg||"Não foi possível concluir.";
 }
-const NOME_PERFIL = {ADMIN:"Administração",GESTOR_CONTRATO:"Gestão do contrato",
+const NOME_PERFIL={ADMIN:"Administração",GESTOR_CONTRATO:"Gestão do contrato",
   FISCAL_ADM:"Fiscalização administrativa",FISCAL_TECNICO:"Fiscalização técnica",
   FISCAL_SETORIAL:"Fiscalização setorial",DEMANDANTE:"Unidade demandante",
   EMPRESA:"Empresa contratada"};
-const NOME_STATUS = {ABERTO:"Aberto",RECEBIDO:"Recebido pela empresa",
-  EM_ORCAMENTO:"Em orçamento",AGUARDANDO_AUTORIZACAO:"Aguardando autorização",
-  AUTORIZADO:"Autorizado",RECUSADO:"Recusado",BLOQUEADO_SEM_SALDO:"Barrado por falta de saldo",
-  EM_EXECUCAO:"Em execução",ATENDIDO:"Atendido, aguardando sua validação",
-  DEVOLVIDO:"Devolvido à empresa",EM_GARANTIA:"Em garantia",
+const NOME_STATUS={ABERTO:"Aberto",RECEBIDO:"Recebido",EM_ORCAMENTO:"Em orçamento",
+  AGUARDANDO_AUTORIZACAO:"Aguardando autorização",AUTORIZADO:"Autorizado",
+  RECUSADO:"Recusado",BLOQUEADO_SEM_SALDO:"Barrado por falta de saldo",
+  EM_EXECUCAO:"Em execução",ATENDIDO:"Atendido, aguardando validação",
+  DEVOLVIDO:"Devolvido",EM_GARANTIA:"Em garantia",
   REABERTO_GARANTIA:"Reaberto em garantia",CONCLUIDO:"Concluído"};
 
-const dataHora = s => s ? new Date(s).toLocaleString("pt-BR",
-  {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "—";
-const soData = s => s ? new Date(s+"T12:00:00").toLocaleDateString("pt-BR") : "—";
+const dataHora=s=>s?new Date(s).toLocaleString("pt-BR",
+  {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}):"—";
+const soData=s=>s?new Date(s+"T12:00:00").toLocaleDateString("pt-BR"):"—";
+const reais=n=>Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 
-/* Estado do prazo. É a única coisa colorida da interface, porque é a
-   única informação em que a cor carrega significado. */
 function estadoPrazo(c){
-  const fim = ["CONCLUIDO","RECUSADO","EM_GARANTIA","ATENDIDO"].includes(c.status);
-  if(fim || !c.prazo_limite) return {classe:"neutro", texto:null};
-  const agora = Date.now(), limite = new Date(c.prazo_limite).getTime();
-  const inicio = new Date(c.aberto_em).getTime();
-  const restante = limite - agora;
-  if(restante <= 0) return {classe:"vencido", texto:"Prazo vencido"};
-  const consumido = (agora - inicio) / (limite - inicio);
-  const horas = Math.floor(restante/3600000);
-  const txt = horas < 24 ? `Faltam ${horas}h` : `Faltam ${Math.floor(horas/24)} dias`;
-  return {classe: consumido >= 0.7 ? "apertado" : "folgado", texto: txt};
+  const fim=["CONCLUIDO","RECUSADO","EM_GARANTIA","ATENDIDO"].includes(c.status);
+  if(fim||!c.prazo_limite) return {classe:"neutro",texto:null};
+  const agora=Date.now(), limite=new Date(c.prazo_limite).getTime();
+  const inicio=new Date(c.aberto_em).getTime(), restante=limite-agora;
+  if(restante<=0) return {classe:"vencido",texto:"Prazo vencido"};
+  const consumido=(agora-inicio)/(limite-inicio);
+  const horas=Math.floor(restante/3600000);
+  const txt=horas<24?`Faltam ${horas}h`:`Faltam ${Math.floor(horas/24)} dias`;
+  return {classe:consumido>=0.7?"apertado":"folgado",texto:txt};
 }
+const classeNivel=o=>o<=2?"critico":o<=4?"alto":"comum";
 
 /* ---------------- imagem ---------------- */
-async function comprimir(file, ladoMax, kbMax){
-  const img = await new Promise((ok,err)=>{
-    const i = new Image(); i.onload=()=>ok(i); i.onerror=()=>err(new Error("imagem inválida"));
-    i.src = URL.createObjectURL(file);
-  });
-  let w = img.width, h = img.height;
-  const escala = Math.min(1, ladoMax/Math.max(w,h));
-  w = Math.round(w*escala); h = Math.round(h*escala);
-  const cv = document.createElement("canvas"); cv.width=w; cv.height=h;
-  cv.getContext("2d").drawImage(img,0,0,w,h);
+async function comprimir(file,ladoMax,kbMax){
+  const img=await new Promise((ok,err)=>{const i=new Image();
+    i.onload=()=>ok(i); i.onerror=()=>err(new Error("imagem inválida"));
+    i.src=URL.createObjectURL(file);});
+  let w=img.width,h=img.height;
+  const escala=Math.min(1,ladoMax/Math.max(w,h));
+  const cv=document.createElement("canvas");
+  cv.width=Math.round(w*escala); cv.height=Math.round(h*escala);
+  cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);
   URL.revokeObjectURL(img.src);
-  let q = 0.85, blob;
+  let q=0.85, blob;
   for(let i=0;i<9;i++){
-    blob = await new Promise(r=>cv.toBlob(r,"image/jpeg",q));
-    if(blob.size <= kbMax*1024) break;
-    q -= 0.09;
-    if(q < 0.2){ // encolhe também, senão a qualidade some antes do tamanho
-      cv.width = Math.round(cv.width*0.8); cv.height = Math.round(cv.height*0.8);
-      cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height); q = 0.7;
-    }
+    blob=await new Promise(r=>cv.toBlob(r,"image/jpeg",q));
+    if(blob.size<=kbMax*1024) break;
+    q-=0.09;
+    if(q<0.2){ cv.width=Math.round(cv.width*0.8); cv.height=Math.round(cv.height*0.8);
+      cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height); q=0.7; }
   }
   return blob;
 }
 async function sha256(blob){
-  const buf = await blob.arrayBuffer();
-  const h = await crypto.subtle.digest("SHA-256", buf);
+  const h=await crypto.subtle.digest("SHA-256", await blob.arrayBuffer());
   return [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,"0")).join("");
 }
-async function enviarFoto(chamadoId, file, momento){
-  const original = await comprimir(file, 1600, 2048);
-  const derivada = await comprimir(file, 640, 50);
-  const hash = await sha256(original);
-  const carimbo = Date.now();
-  const po = `original/${chamadoId}/${momento.toLowerCase()}-${carimbo}.jpg`;
-  const pd = `derivada/${chamadoId}/${momento.toLowerCase()}-${carimbo}.jpg`;
-  let r = await sb.storage.from("chamado-foto").upload(po, original, {contentType:"image/jpeg"});
+async function enviarFoto(chamadoId,file,momento,rodada){
+  const original=await comprimir(file,1600,2048);
+  const derivada=await comprimir(file,640,50);
+  const hash=await sha256(original), t=Date.now();
+  const po=`original/${chamadoId}/${momento.toLowerCase()}-${t}.jpg`;
+  const pd=`derivada/${chamadoId}/${momento.toLowerCase()}-${t}.jpg`;
+  let r=await sb.storage.from("chamado-foto").upload(po,original,{contentType:"image/jpeg"});
   if(r.error) throw r.error;
-  r = await sb.storage.from("chamado-foto").upload(pd, derivada, {contentType:"image/jpeg"});
+  r=await sb.storage.from("chamado-foto").upload(pd,derivada,{contentType:"image/jpeg"});
   if(r.error) throw r.error;
-  const { error } = await sb.from("chamado_foto").insert({
-    chamado_id: chamadoId, momento, rodada: 1,
-    path_original: po, path_derivada: pd,
-    bytes_original: original.size, bytes_derivada: derivada.size,
-    sha256: hash, enviado_por: EU.id
-  });
+  const {error}=await sb.from("chamado_foto").insert({chamado_id:chamadoId,momento,
+    rodada:rodada||1,path_original:po,path_derivada:pd,
+    bytes_original:original.size,bytes_derivada:derivada.size,
+    sha256:hash,enviado_por:EU.id});
   if(error) throw error;
 }
 async function urlFoto(path){
-  const { data } = await sb.storage.from("chamado-foto").createSignedUrl(path, 300);
-  return data?.signedUrl || null;
+  const {data}=await sb.storage.from("chamado-foto").createSignedUrl(path,300);
+  return data?.signedUrl||null;
 }
 
-/* ---------------- catálogos ---------------- */
+/* ================================================================
+   DEMANDANTE
+================================================================ */
 async function carregarCatalogos(){
-  const [c,t,a,f] = await Promise.all([
+  const [c,t,a,f]=await Promise.all([
     sb.from("categoria_servico").select("id,nome").eq("ativo",true).order("nome"),
     sb.from("tipo_servico").select("id,nome,categoria_id").eq("ativo",true).order("nome"),
     sb.from("tipo_ambiente").select("id,nome").eq("ativo",true).order("id"),
-    sb.from("frase_urgencia").select("id,frase,ordem_exibicao").eq("ativo",true).order("ordem_exibicao")
-  ]);
+    sb.from("frase_urgencia").select("id,frase,ordem_exibicao,exige_data")
+      .eq("ativo",true).order("ordem_exibicao")]);
   CATEGORIAS=c.data||[]; TIPOS=t.data||[]; AMBIENTES=a.data||[]; FRASES=f.data||[];
 }
 
-/* ---------------- lista do demandante ---------------- */
 async function telaLista(){
-  $("conteudo").innerHTML = `
-    <div class="barra">
-      <h2>Chamados da sua unidade</h2><span class="espaco"></span>
-      <button class="principal" id="btnNovo">Abrir chamado</button>
-    </div>
+  $("conteudo").innerHTML=`
+    <div class="barra"><h2>Chamados da sua unidade</h2><span class="espaco"></span>
+      <button class="principal" id="btnNovo">Abrir chamado</button></div>
     <div id="avisoLista"></div>
     <div id="listaChamados"><p class="vazio">Carregando…</p></div>`;
-  $("btnNovo").onclick = telaNovo;
-
-  const { data, error } = await sb.from("v_chamado_demandante")
-    .select("*").order("aberto_em",{ascending:false});
-  if(error){ recado("avisoLista", traduzir(error.message), "erro"); return; }
-  if(!data.length){
-    $("listaChamados").innerHTML =
-      `<p class="vazio">Nenhum chamado aberto ainda.<br>
-       Use “Abrir chamado” para registrar o primeiro.</p>`;
-    return;
-  }
-  $("listaChamados").innerHTML = data.map(c=>{
-    const p = estadoPrazo(c);
-    const validar = c.status==="ATENDIDO";
+  $("btnNovo").onclick=telaNovo;
+  const {data,error}=await sb.from("v_chamado_demandante").select("*")
+    .order("aberto_em",{ascending:false});
+  if(error) return recado("avisoLista",traduzir(error.message),"erro");
+  if(!data.length){ $("listaChamados").innerHTML=
+    `<p class="vazio">Nenhum chamado aberto ainda.<br>Use “Abrir chamado” para registrar o primeiro.</p>`;
+    return; }
+  $("listaChamados").innerHTML=data.map(c=>{
+    const p=estadoPrazo(c);
     return `<button class="chamado ${p.classe}" data-id="${c.id}">
-      <span class="linha1">
-        <span class="num">nº ${c.numero}</span>
-        <span class="tit">${esc(c.tipo_servico)}</span>
-      </span>
+      <span class="linha1"><span class="num">nº ${c.numero}</span>
+        <span class="tit">${esc(c.tipo_servico)}</span></span>
       <span class="linha2">${esc(c.ambiente)} · ${esc(c.setor_especifico)}</span>
       <span class="linha3">
         <span class="estado">${esc(NOME_STATUS[c.status]||c.status)}</span>
         ${p.texto?`<span class="prazo ${p.classe}">${p.texto}</span>`:""}
         ${!c.tem_foto_antes?`<span class="pendencia">Foto do antes pendente</span>`:""}
-        ${validar?`<span class="pendencia">Aguarda sua validação</span>`:""}
-      </span></button>`;
-  }).join("");
+        ${c.status==="ATENDIDO"?`<span class="pendencia">Aguarda sua validação</span>`:""}
+      </span></button>`;}).join("");
   document.querySelectorAll(".chamado").forEach(b=>
-    b.onclick = () => telaDetalhe(Number(b.dataset.id)));
+    b.onclick=()=>telaDetalheDemandante(Number(b.dataset.id)));
 }
 
-/* ---------------- abrir chamado ---------------- */
 function telaNovo(){
-  $("conteudo").innerHTML = `
-    <div class="barra">
-      <button class="discreto" id="btnVoltar">Voltar</button>
-      <h2>Abrir chamado</h2>
-    </div>
+  $("conteudo").innerHTML=`
+    <div class="barra"><button class="discreto" id="btnVoltar">Voltar</button>
+      <h2>Abrir chamado</h2></div>
     <div id="avisoNovo"></div>
     <div class="bloco">
       <div class="par">
         <div class="campo"><label class="obrig" for="fCat">Categoria</label>
           <select id="fCat"><option value="">Escolha…</option>
-          ${CATEGORIAS.map(c=>`<option value="${c.id}">${esc(c.nome)}</option>`).join("")}
-          </select></div>
+          ${CATEGORIAS.map(c=>`<option value="${c.id}">${esc(c.nome)}</option>`).join("")}</select></div>
         <div class="campo"><label class="obrig" for="fTipo">Tipo de serviço</label>
           <select id="fTipo" disabled><option value="">Escolha a categoria antes</option></select></div>
         <div class="campo"><label class="obrig" for="fAmb">Tipo de ambiente</label>
           <select id="fAmb"><option value="">Escolha…</option>
-          ${AMBIENTES.map(a=>`<option value="${a.id}">${esc(a.nome)}</option>`).join("")}
-          </select></div>
+          ${AMBIENTES.map(a=>`<option value="${a.id}">${esc(a.nome)}</option>`).join("")}</select></div>
         <div class="campo"><label class="obrig" for="fSetor">Local exato</label>
           <input id="fSetor" maxlength="120" placeholder="Sala E5, bloco E">
           <p class="ajuda">Onde alguém que não conhece o prédio conseguiria chegar.</p></div>
@@ -392,258 +366,484 @@ function telaNovo(){
         <textarea id="fDesc" maxlength="1000" placeholder="Duas lâmpadas queimadas sobre a mesa do professor."></textarea></div>
       <div class="campo"><label class="obrig" for="fFrase">Como isso afeta o uso do ambiente</label>
         <select id="fFrase"><option value="">Escolha…</option>
-        ${FRASES.map(f=>`<option value="${f.id}">${esc(f.frase)}</option>`).join("")}
-        </select>
+        ${FRASES.map(f=>`<option value="${f.id}" data-data="${f.exige_data?1:0}">${esc(f.frase)}</option>`).join("")}</select>
         <p class="ajuda">Escolha a frase que descreve a situação real. Ela define o prazo de atendimento.</p></div>
       <div class="campo" id="boxData" style="display:none">
-        <label class="obrig" for="fData">Data esperada</label>
-        <input id="fData" type="date">
+        <label class="obrig" for="fData">Data esperada</label><input id="fData" type="date">
         <p class="ajuda">Precisa ser pelo menos três dias úteis à frente.</p></div>
       <div class="campo"><label class="obrig" for="fFoto">Foto do problema</label>
         <input id="fFoto" type="file" accept="image/*" capture="environment">
-        <p class="ajuda">Serve como registro do antes. A foto é reduzida automaticamente antes de subir.</p></div>
+        <p class="ajuda">Serve como registro do antes. É reduzida automaticamente antes de subir.</p></div>
       <button class="principal" id="btnSalvar">Abrir chamado</button>
     </div>`;
-  $("btnVoltar").onclick = telaLista;
-
-  $("fCat").onchange = () => {
-    const cat = Number($("fCat").value);
-    const lista = TIPOS.filter(t=>t.categoria_id===cat);
-    $("fTipo").disabled = !lista.length;
-    $("fTipo").innerHTML = `<option value="">Escolha…</option>` +
+  $("btnVoltar").onclick=telaLista;
+  $("fCat").onchange=()=>{
+    const cat=Number($("fCat").value), lista=TIPOS.filter(t=>t.categoria_id===cat);
+    $("fTipo").disabled=!lista.length;
+    $("fTipo").innerHTML=`<option value="">Escolha…</option>`+
       lista.map(t=>`<option value="${t.id}">${esc(t.nome)}</option>`).join("");
   };
-  /* As frases de programação exigem data. Descobrimos pelo texto, porque
-     o nível de urgência não é visível para este perfil — de propósito. */
-  $("fFrase").onchange = () => {
-    const txt = $("fFrase").selectedOptions[0]?.text.toLowerCase() || "";
-    const programado = txt.includes("programad") || txt.includes("aparência");
-    $("boxData").style.display = programado ? "block" : "none";
+  $("fFrase").onchange=()=>{
+    const op=$("fFrase").selectedOptions[0];
+    $("boxData").style.display = op && op.dataset.data==="1" ? "block":"none";
   };
-  $("btnSalvar").onclick = salvarChamado;
+  $("btnSalvar").onclick=salvarChamado;
 }
 
 async function salvarChamado(){
   recado("avisoNovo","");
-  const b = $("btnSalvar");
-  const dados = {
-    unidade_id: EU.unidade_id, aberto_por: EU.id,
-    tipo_servico_id: Number($("fTipo").value)||null,
-    tipo_ambiente_id: Number($("fAmb").value)||null,
-    setor_especifico: $("fSetor").value.trim(),
-    descricao: $("fDesc").value.trim(),
-    frase_urgencia_id: Number($("fFrase").value)||null,
-    data_esperada: $("boxData").style.display==="block" ? ($("fData").value||null) : null,
-    nivel_codigo: "NORMAL",   // o gatilho do banco sobrescreve pela frase
-    status: "ABERTO"
-  };
-  const arquivo = $("fFoto").files[0];
-  if(!dados.tipo_servico_id) return recado("avisoNovo","Escolha a categoria e o tipo de serviço.","erro");
-  if(!dados.tipo_ambiente_id) return recado("avisoNovo","Escolha o tipo de ambiente.","erro");
-  if(dados.setor_especifico.length < 3) return recado("avisoNovo","Diga onde é, com pelo menos 3 letras.","erro");
-  if(dados.descricao.length < 10) return recado("avisoNovo","Descreva o problema com um pouco mais de detalhe.","erro");
-  if(!dados.frase_urgencia_id) return recado("avisoNovo","Escolha como isso afeta o uso do ambiente.","erro");
-  if(!arquivo) return recado("avisoNovo","A foto do problema é obrigatória.","erro");
-
-  b.disabled = true; b.textContent = "Abrindo…";
-  const { data, error } = await sb.from("chamado").insert(dados).select("id,numero").single();
+  const b=$("btnSalvar");
+  const d={unidade_id:EU.unidade_id,aberto_por:EU.id,
+    tipo_servico_id:Number($("fTipo").value)||null,
+    tipo_ambiente_id:Number($("fAmb").value)||null,
+    setor_especifico:$("fSetor").value.trim(),descricao:$("fDesc").value.trim(),
+    frase_urgencia_id:Number($("fFrase").value)||null,
+    data_esperada:$("boxData").style.display==="block"?($("fData").value||null):null,
+    nivel_codigo:"NORMAL",status:"ABERTO"};
+  const arq=$("fFoto").files[0];
+  if(!d.tipo_servico_id) return recado("avisoNovo","Escolha a categoria e o tipo de serviço.","erro");
+  if(!d.tipo_ambiente_id) return recado("avisoNovo","Escolha o tipo de ambiente.","erro");
+  if(d.setor_especifico.length<3) return recado("avisoNovo","Diga onde é, com pelo menos 3 letras.","erro");
+  if(d.descricao.length<10) return recado("avisoNovo","Descreva o problema com um pouco mais de detalhe.","erro");
+  if(!d.frase_urgencia_id) return recado("avisoNovo","Escolha como isso afeta o uso do ambiente.","erro");
+  if(!arq) return recado("avisoNovo","A foto do problema é obrigatória.","erro");
+  b.disabled=true; b.textContent="Abrindo…";
+  const {data,error}=await sb.from("chamado").insert(d).select("id,numero").single();
   if(error){ b.disabled=false; b.textContent="Abrir chamado";
-             return recado("avisoNovo", traduzir(error.message), "erro"); }
-  try{
-    b.textContent = "Enviando foto…";
-    await enviarFoto(data.id, arquivo, "ANTES");
-  }catch(e){
-    b.disabled=false; b.textContent="Abrir chamado";
-    return recado("avisoNovo",
-      `Chamado nº ${data.numero} foi criado, mas a foto não subiu: ${traduzir(e.message)} `+
-      `Abra o chamado na lista e envie a foto — a empresa só recebe depois disso.`, "atencao");
-  }
+             return recado("avisoNovo",traduzir(error.message),"erro"); }
+  try{ b.textContent="Enviando foto…"; await enviarFoto(data.id,arq,"ANTES",1); }
+  catch(e){ b.disabled=false; b.textContent="Abrir chamado";
+    return recado("avisoNovo",`Chamado nº ${data.numero} foi criado, mas a foto não subiu: `+
+      `${traduzir(e.message)} Abra o chamado na lista e envie a foto — a empresa só recebe depois disso.`,"atencao"); }
   await telaLista();
-  recado("avisoLista", `Chamado nº ${data.numero} aberto. A empresa foi notificada.`, "bom");
+  recado("avisoLista",`Chamado nº ${data.numero} aberto. A empresa foi notificada.`,"bom");
 }
 
-/* ---------------- detalhe ---------------- */
-async function telaDetalhe(id){
-  $("conteudo").innerHTML = `<div class="barra">
-      <button class="discreto" id="btnVoltar">Voltar</button><h2>Chamado</h2></div>
+async function telaDetalheDemandante(id){
+  $("conteudo").innerHTML=`<div class="barra">
+    <button class="discreto" id="btnVoltar">Voltar</button><h2>Chamado</h2></div>
     <div id="avisoDet"></div><div id="corpoDet"><p class="vazio">Carregando…</p></div>`;
-  $("btnVoltar").onclick = telaLista;
-
-  const [{data:c, error:e1}, {data:tl}, {data:fotos}] = await Promise.all([
+  $("btnVoltar").onclick=telaLista;
+  const [{data:c,error:e1},{data:tl},{data:fotos}]=await Promise.all([
     sb.from("v_chamado_demandante").select("*").eq("id",id).single(),
     sb.from("v_timeline").select("*").eq("chamado_id",id).order("criado_em"),
-    sb.from("chamado_foto").select("*").eq("chamado_id",id).order("enviado_em")
-  ]);
-  if(e1||!c){ recado("avisoDet","Chamado não encontrado.","erro"); return; }
-
-  const p = estadoPrazo(c);
-  const imgs = [];
-  for(const f of (fotos||[])){
-    const u = await urlFoto(f.path_derivada);
+    sb.from("chamado_foto").select("*").eq("chamado_id",id).order("enviado_em")]);
+  if(e1||!c) return recado("avisoDet","Chamado não encontrado.","erro");
+  const p=estadoPrazo(c), imgs=[];
+  for(const f of (fotos||[])){ const u=await urlFoto(f.path_derivada);
     if(u) imgs.push(`<div><p class="rot">${f.momento==="ANTES"?"Antes":"Depois"} · ${dataHora(f.enviado_em)}</p>
-                     <img class="foto" src="${u}" alt="Registro do ${f.momento==="ANTES"?"problema":"serviço concluído"}"></div>`);
-  }
+      <img class="foto" src="${u}" alt="Registro"></div>`); }
 
-  $("corpoDet").innerHTML = `
+  $("corpoDet").innerHTML=`
     <div class="bloco">
-      <div class="barra"><h3>nº ${c.numero} · ${esc(c.tipo_servico)}</h3>
-        <span class="espaco"></span>
+      <div class="barra"><h3>nº ${c.numero} · ${esc(c.tipo_servico)}</h3><span class="espaco"></span>
         <span class="estado">${esc(NOME_STATUS[c.status]||c.status)}</span>
         ${p.texto?`<span class="prazo ${p.classe}">${p.texto}</span>`:""}</div>
       <div class="par">
-        <div>
-          <div class="dado"><p class="rot">Categoria</p><p class="val">${esc(c.categoria)}</p></div>
+        <div><div class="dado"><p class="rot">Categoria</p><p class="val">${esc(c.categoria)}</p></div>
           <div class="dado"><p class="rot">Ambiente</p><p class="val">${esc(c.ambiente)}</p></div>
-          <div class="dado"><p class="rot">Local exato</p><p class="val">${esc(c.setor_especifico)}</p></div>
-        </div>
-        <div>
-          <div class="dado"><p class="rot">Aberto em</p><p class="val">${dataHora(c.aberto_em)}</p></div>
+          <div class="dado"><p class="rot">Local exato</p><p class="val">${esc(c.setor_especifico)}</p></div></div>
+        <div><div class="dado"><p class="rot">Aberto em</p><p class="val">${dataHora(c.aberto_em)}</p></div>
           <div class="dado"><p class="rot">Prazo de atendimento</p><p class="val">${dataHora(c.prazo_limite)}</p></div>
-          ${c.garantia_ate?`<div class="dado"><p class="rot">Garantia até</p><p class="val">${soData(c.garantia_ate)}</p></div>`:""}
-        </div>
+          ${c.garantia_ate?`<div class="dado"><p class="rot">Garantia até</p><p class="val">${soData(c.garantia_ate)}</p></div>`:""}</div>
       </div>
       <div class="dado"><p class="rot">Descrição</p><p class="val">${esc(c.descricao)}</p></div>
-      <div class="dado"><p class="rot">Situação informada na abertura</p>
-        <p class="val">${esc(c.situacao_informada)}</p></div>
     </div>
-
-    ${!c.tem_foto_antes ? `<div class="bloco">
-      <h3>Foto do antes pendente</h3>
+    ${!c.tem_foto_antes?`<div class="bloco"><h3>Foto do antes pendente</h3>
       <p class="nota">A empresa não recebe este chamado enquanto a foto não for enviada.</p>
       <div class="campo"><input id="fotoTardia" type="file" accept="image/*" capture="environment"></div>
-      <button class="principal" id="btnFotoTardia">Enviar foto</button></div>` : ""}
-
-    ${imgs.length?`<div class="bloco"><h3>Registro fotográfico</h3>
-      <div class="par">${imgs.join("")}</div></div>`:""}
-
-    ${c.status==="ATENDIDO"?`<div class="bloco">
-      <h3>Validar o serviço</h3>
+      <button class="principal" id="btnFotoTardia">Enviar foto</button></div>`:""}
+    ${imgs.length?`<div class="bloco"><h3>Registro fotográfico</h3><div class="par">${imgs.join("")}</div></div>`:""}
+    ${c.status==="ATENDIDO"?`<div class="bloco"><h3>Validar o serviço</h3>
       <p class="nota">Confira no local antes de validar. Sem manifestação em 5 dias,
-         o sistema homologa como atendido com nota boa.</p>
+        o sistema homologa como atendido com nota boa.</p>
       <div class="campo"><label>Qualidade do serviço</label>
-        <div class="escala" id="escalaNota">
-          ${[[1,"Péssimo"],[2,"Ruim"],[3,"Regular"],[4,"Bom"],[5,"Excelente"]]
-            .map(([n,r])=>`<button data-n="${n}" aria-pressed="false">${r}</button>`).join("")}
-        </div></div>
+        <div class="escala" id="escalaNota">${[[1,"Péssimo"],[2,"Ruim"],[3,"Regular"],[4,"Bom"],[5,"Excelente"]]
+          .map(([n,r])=>`<button data-n="${n}" aria-pressed="false">${r}</button>`).join("")}</div></div>
       <div class="campo"><label for="fOcor">Observações</label>
-        <textarea id="fOcor" maxlength="1000" placeholder="O que ficou bom, o que ficou faltando."></textarea></div>
-      <div class="barra">
-        <button class="principal" id="btnAceitar">Aceitar o serviço</button>
-        <button class="discreto" id="btnDevolver">Não foi resolvido, devolver</button></div>
-      </div>`:""}
+        <textarea id="fOcor" maxlength="1000"></textarea></div>
+      <div class="barra"><button class="principal" id="btnAceitar">Aceitar o serviço</button>
+        <button class="discreto risco" id="btnDevolver">Não foi resolvido, devolver</button></div></div>`:""}
+    <div class="bloco"><h3>Andamento</h3><ul class="linha-tempo">
+      ${(tl||[]).map(t=>`<li><p class="quando">${dataHora(t.criado_em)} · ${esc(t.responsavel)}</p>
+        <p class="oque">${esc(NOME_STATUS[t.status_novo]||t.status_novo)}</p>
+        ${t.observacao?`<p class="obs">${esc(t.observacao)}</p>`:""}</li>`).join("")||
+        `<li><p class="obs">Sem registros.</p></li>`}</ul></div>`;
 
-    <div class="bloco"><h3>Andamento</h3>
-      <ul class="linha-tempo">
-        ${(tl||[]).map(t=>`<li>
-          <p class="quando">${dataHora(t.criado_em)} · ${esc(t.responsavel)}</p>
-          <p class="oque">${esc(NOME_STATUS[t.status_novo]||t.status_novo)}</p>
-          ${t.observacao?`<p class="obs">${esc(t.observacao)}</p>`:""}</li>`).join("")}
-      </ul></div>`;
-
-  if($("btnFotoTardia")) $("btnFotoTardia").onclick = async () => {
-    const f = $("fotoTardia").files[0];
+  if($("btnFotoTardia")) $("btnFotoTardia").onclick=async()=>{
+    const f=$("fotoTardia").files[0];
     if(!f) return recado("avisoDet","Escolha uma foto.","erro");
-    const b = $("btnFotoTardia"); b.disabled=true; b.textContent="Enviando…";
-    try{ await enviarFoto(id, f, "ANTES"); await telaDetalhe(id); }
-    catch(e){ b.disabled=false; b.textContent="Enviar foto";
-              recado("avisoDet", traduzir(e.message), "erro"); }
+    const b=$("btnFotoTardia"); b.disabled=true; b.textContent="Enviando…";
+    try{ await enviarFoto(id,f,"ANTES",1); await telaDetalheDemandante(id); }
+    catch(e){ b.disabled=false; b.textContent="Enviar foto"; recado("avisoDet",traduzir(e.message),"erro"); }
   };
-
-  let nota = null;
-  document.querySelectorAll("#escalaNota button").forEach(bt=>{
-    bt.onclick = () => {
-      nota = Number(bt.dataset.n);
-      document.querySelectorAll("#escalaNota button")
-        .forEach(x=>x.setAttribute("aria-pressed", x===bt ? "true":"false"));
-    };
-  });
+  let nota=null;
+  document.querySelectorAll("#escalaNota button").forEach(bt=>{ bt.onclick=()=>{
+    nota=Number(bt.dataset.n);
+    document.querySelectorAll("#escalaNota button").forEach(x=>
+      x.setAttribute("aria-pressed",x===bt?"true":"false")); };});
   async function validar(atendida){
     if(!nota) return recado("avisoDet","Escolha a qualidade do serviço.","erro");
-    if(!atendida && $("fOcor").value.trim().length < 10)
+    if(!atendida && $("fOcor").value.trim().length<10)
       return recado("avisoDet","Diga o que continua errado, para a empresa saber o que refazer.","erro");
-    const { error } = await sb.rpc("validar_chamado", {
-      p_chamado:id, p_nota:nota, p_atendida:atendida,
-      p_ocorrencias: $("fOcor").value.trim() || null });
-    if(error) return recado("avisoDet", traduzir(error.message), "erro");
+    const {error}=await sb.rpc("validar_chamado",{p_chamado:id,p_nota:nota,
+      p_atendida:atendida,p_ocorrencias:$("fOcor").value.trim()||null});
+    if(error) return recado("avisoDet",traduzir(error.message),"erro");
     await telaLista();
-    recado("avisoLista", atendida ? "Serviço aceito. O chamado entrou em garantia."
-                                  : "Chamado devolvido à empresa.", "bom");
+    recado("avisoLista",atendida?"Serviço aceito. O chamado entrou em garantia."
+                                :"Chamado devolvido à empresa.","bom");
   }
-  if($("btnAceitar"))  $("btnAceitar").onclick  = () => validar(true);
-  if($("btnDevolver")) $("btnDevolver").onclick = () => validar(false);
+  if($("btnAceitar")) $("btnAceitar").onclick=()=>validar(true);
+  if($("btnDevolver")) $("btnDevolver").onclick=()=>validar(false);
 }
 
-/* ---------------- provisório para os demais perfis ---------------- */
+/* ================================================================
+   EMPRESA
+================================================================ */
+async function carregarEmpresa(){
+  const [pr,fu,tr]=await Promise.all([
+    sb.from("cidade_predio").select("id,nome").eq("ativo",true).order("id"),
+    sb.from("funcionario_empresa").select("id,nome,funcao").eq("ativo",true).order("nome"),
+    sb.from("tabela_referencia").select("id,nome,competencia").eq("ativo",true).order("id")]);
+  PREDIOS=pr.data||[]; FUNCIONARIOS=fu.data||[]; TABELAS=tr.data||[];
+}
+
+async function telaEmpresa(){
+  $("conteudo").innerHTML=`<div class="barra"><h2>Chamados</h2><span class="espaco"></span>
+    <select id="fOrdem" style="width:auto">
+      <option value="urgencia">Ordenar por urgência</option>
+      <option value="prazo">Ordenar por prazo</option>
+      <option value="abertura">Ordenar por data de abertura</option>
+      <option value="tipo">Ordenar por tipo de serviço</option>
+    </select></div>
+    <div id="avisoEmp"></div><div id="abas" class="abas"></div>
+    <div id="listaEmp"><p class="vazio">Carregando…</p></div>`;
+  $("fOrdem").value=ORDEM;
+  $("fOrdem").onchange=()=>{ ORDEM=$("fOrdem").value; pintarEmpresa(); };
+
+  /* Recebimento automático: o simples acesso à lista já marca como
+     recebido, que é o que a especificação manda e o que faz a contagem
+     de prazo começar a valer. */
+  const {error:eR}=await sb.rpc("receber_chamados");
+  if(eR) recado("avisoEmp",traduzir(eR.message),"atencao");
+  await pintarEmpresa();
+}
+
+let CACHE_EMP=[];
+async function pintarEmpresa(){
+  const {data,error}=await sb.from("v_chamado_gestao").select("*");
+  if(error) return recado("avisoEmp",traduzir(error.message),"erro");
+  CACHE_EMP=data||[];
+  const abertos=CACHE_EMP.filter(c=>!["CONCLUIDO","RECUSADO"].includes(c.status));
+  const porPredio={};
+  abertos.forEach(c=>{ const k=c.predio||"Sem prédio definido";
+    porPredio[k]=(porPredio[k]||0)+1; });
+  $("abas").innerHTML=
+    `<button data-aba="TODOS" aria-selected="${ABA==="TODOS"}">Todos
+       <span class="contagem">${abertos.length}</span></button>`+
+    Object.keys(porPredio).sort().map(k=>
+      `<button data-aba="${esc(k)}" aria-selected="${ABA===k}">${esc(k)}
+        <span class="contagem">${porPredio[k]}</span></button>`).join("");
+  document.querySelectorAll("#abas button").forEach(b=>
+    b.onclick=()=>{ ABA=b.dataset.aba; pintarEmpresa(); });
+
+  let lista=ABA==="TODOS"?abertos:abertos.filter(c=>(c.predio||"Sem prédio definido")===ABA);
+  const ordenar={
+    urgencia:(a,b)=>a.nivel_ordem-b.nivel_ordem||
+      (new Date(a.prazo_limite||8e15)-new Date(b.prazo_limite||8e15)),
+    prazo:(a,b)=>new Date(a.prazo_limite||8e15)-new Date(b.prazo_limite||8e15),
+    abertura:(a,b)=>new Date(b.aberto_em)-new Date(a.aberto_em),
+    tipo:(a,b)=>a.tipo_servico.localeCompare(b.tipo_servico,"pt-BR")};
+  lista=[...lista].sort(ordenar[ORDEM]);
+
+  if(!lista.length){ $("listaEmp").innerHTML=`<p class="vazio">Nenhum chamado aberto nesta aba.</p>`; return; }
+  $("listaEmp").innerHTML=lista.map(c=>{
+    const p=estadoPrazo(c);
+    return `<button class="chamado ${p.classe}" data-id="${c.id}">
+      <span class="linha1"><span class="num">nº ${c.numero}</span>
+        <span class="tit">${esc(c.tipo_servico)}</span></span>
+      <span class="linha2">${esc(c.unidade_nome)} · ${esc(c.ambiente)} · ${esc(c.setor_especifico)}</span>
+      <span class="linha3">
+        <span class="nivel ${classeNivel(c.nivel_ordem)}">${esc(c.nivel_nome)}</span>
+        <span class="estado">${esc(NOME_STATUS[c.status]||c.status)}</span>
+        ${p.texto?`<span class="prazo ${p.classe}">${p.texto}</span>`:""}
+        ${c.execucao_emergencial?`<span class="pendencia">Execução emergencial</span>`:""}
+      </span></button>`;}).join("");
+  document.querySelectorAll("#listaEmp .chamado").forEach(b=>
+    b.onclick=()=>telaDetalheEmpresa(Number(b.dataset.id)));
+}
+
+function linhasInsumo(itens,fase,editavel){
+  const total=itens.reduce((s,i)=>s+Number(i.valor_total),0);
+  return `<table><thead><tr><th>Código</th><th>Descrição</th><th>Un.</th>
+      <th class="num">Qtd</th><th class="num">Unitário</th><th class="num">Total</th>
+      ${editavel?"<th></th>":""}</tr></thead><tbody>
+    ${itens.length?itens.map(i=>`<tr>
+      <td>${esc(i.codigo_snapshot)}</td><td>${esc(i.descricao_snapshot)}</td>
+      <td>${esc(i.unidade_medida_snapshot)}</td>
+      <td class="num">${Number(i.quantidade).toLocaleString("pt-BR")}</td>
+      <td class="num">${reais(i.valor_unitario_snapshot)}</td>
+      <td class="num">${reais(i.valor_total)}</td>
+      ${editavel?`<td><button class="discreto risco" data-rm="${i.id}">Remover</button></td>`:""}
+      </tr>`).join(""):`<tr><td colspan="${editavel?7:6}">Nenhum item lançado.</td></tr>`}
+    </tbody><tfoot><tr><td colspan="${editavel?5:5}">Total ${fase.toLowerCase()}</td>
+      <td class="num">${reais(total)}</td>${editavel?"<td></td>":""}</tr></tfoot></table>`;
+}
+
+async function telaDetalheEmpresa(id){
+  $("conteudo").innerHTML=`<div class="barra">
+    <button class="discreto" id="btnVoltar">Voltar</button><h2>Chamado</h2></div>
+    <div id="avisoDet"></div><div id="corpoDet"><p class="vazio">Carregando…</p></div>`;
+  $("btnVoltar").onclick=telaEmpresa;
+
+  const [{data:c,error:e1},{data:tl},{data:fotos},{data:ins},{data:rod}]=await Promise.all([
+    sb.from("v_chamado_gestao").select("*").eq("id",id).single(),
+    sb.from("v_timeline").select("*").eq("chamado_id",id).order("criado_em"),
+    sb.from("chamado_foto").select("*").eq("chamado_id",id).order("enviado_em"),
+    sb.from("v_insumo").select("*").eq("chamado_id",id).order("id"),
+    sb.rpc("rodada_atual",{p_chamado:id})]);
+  if(e1||!c) return recado("avisoDet","Chamado não encontrado.","erro");
+  const RODADA=rod||1;
+  const previstos=(ins||[]).filter(i=>i.fase==="PREVISTO");
+  const executados=(ins||[]).filter(i=>i.fase==="EXECUTADO");
+  const p=estadoPrazo(c);
+  const podeOrcar=["RECEBIDO","EM_ORCAMENTO"].includes(c.status);
+  const podeIniciar=["AUTORIZADO","DEVOLVIDO","REABERTO_GARANTIA"].includes(c.status)
+                    ||(c.status==="RECEBIDO"&&c.nivel_codigo==="EMERGENCIA");
+  const emExecucao=c.status==="EM_EXECUCAO";
+  const imgs=[];
+  for(const f of (fotos||[])){ const u=await urlFoto(f.path_derivada);
+    if(u) imgs.push(`<div><p class="rot">${f.momento==="ANTES"?"Antes":"Depois"} · ${dataHora(f.enviado_em)}</p>
+      <img class="foto" src="${u}" alt="Registro"></div>`); }
+
+  $("corpoDet").innerHTML=`
+    <div class="bloco">
+      <div class="barra"><h3>nº ${c.numero} · ${esc(c.tipo_servico)}</h3><span class="espaco"></span>
+        <span class="nivel ${classeNivel(c.nivel_ordem)}">${esc(c.nivel_nome)}</span>
+        <span class="estado">${esc(NOME_STATUS[c.status]||c.status)}</span>
+        ${p.texto?`<span class="prazo ${p.classe}">${p.texto}</span>`:""}</div>
+      <div class="par">
+        <div><div class="dado"><p class="rot">Unidade</p><p class="val">${esc(c.unidade_nome)}</p></div>
+          <div class="dado"><p class="rot">Prédio</p><p class="val">${esc(c.predio||"não definido")}</p></div>
+          <div class="dado"><p class="rot">Local exato</p><p class="val">${esc(c.setor_especifico)}</p></div>
+          <div class="dado"><p class="rot">Ambiente</p><p class="val">${esc(c.ambiente)}</p></div></div>
+        <div><div class="dado"><p class="rot">Aberto em</p><p class="val">${dataHora(c.aberto_em)}</p></div>
+          <div class="dado"><p class="rot">Prazo</p><p class="val">${dataHora(c.prazo_limite)}</p></div>
+          <div class="dado"><p class="rot">Solicitante</p><p class="val">${esc(c.aberto_por_nome||"—")}</p></div>
+          ${c.funcionario_nome?`<div class="dado"><p class="rot">Executante</p><p class="val">${esc(c.funcionario_nome)}</p></div>`:""}</div>
+      </div>
+      <div class="dado"><p class="rot">Descrição</p><p class="val">${esc(c.descricao)}</p></div>
+      <div class="dado"><p class="rot">Situação informada na abertura</p><p class="val">${esc(c.situacao_informada)}</p></div>
+    </div>
+    ${imgs.length?`<div class="bloco"><h3>Registro fotográfico</h3><div class="par">${imgs.join("")}</div></div>`:""}
+
+    <div class="bloco"><h3>Orçamento</h3>
+      <p class="nota">Itens previstos. Acima de R$ 2.000, somando o que a mesma unidade
+        já orçou na mesma categoria nos últimos 30 dias, o chamado vai para autorização.</p>
+      <div id="tabPrev">${linhasInsumo(previstos,"previsto",podeOrcar)}</div>
+      ${podeOrcar?`<div class="grade-insumo" style="margin-top:1rem">
+        <div class="campo"><label for="iCod">Código</label><input id="iCod"></div>
+        <div class="campo"><label for="iDesc">Descrição</label><input id="iDesc"></div>
+        <div class="campo"><label for="iUn">Un.</label><input id="iUn" value="un"></div>
+        <div class="campo"><label for="iQtd">Qtd</label><input id="iQtd" type="number" step="0.01" min="0.01"></div>
+        <div class="campo"><label for="iVal">Unitário</label><input id="iVal" type="number" step="0.01" min="0"></div>
+        <div class="campo"><label>&nbsp;</label><button class="discreto" id="btnAddPrev">Incluir</button></div>
+      </div>
+      <div class="campo"><label for="iTab">Tabela de referência</label>
+        <select id="iTab">${TABELAS.map(t=>`<option value="${t.id}">${esc(t.nome)} · ${soData(t.competencia)}</option>`).join("")}</select>
+        <p class="ajuda">Código que não existir nessa tabela é cadastrado como pendente de homologação da fiscalização.</p></div>
+      <button class="principal" id="btnOrcar">Enviar orçamento</button>`:""}
+    </div>
+
+    ${podeIniciar?`<div class="bloco"><h3>Iniciar execução</h3>
+      ${c.status==="RECEBIDO"&&c.nivel_codigo==="EMERGENCIA"?
+        `<p class="nota">Emergência: você pode executar antes de orçar. O orçamento
+          passa a ser obrigatório para encerrar, e se cruzar a alçada vai para ratificação.</p>`:""}
+      <div class="par">
+        <div class="campo"><label class="obrig" for="fMao">Mão de obra</label>
+          <select id="fMao"><option value="FIXA">Fixa</option><option value="EVENTUAL">Eventual</option></select></div>
+        <div class="campo"><label for="fFunc">Funcionário</label>
+          <select id="fFunc"><option value="">Escolha…</option>
+          ${FUNCIONARIOS.map(f=>`<option value="${f.id}">${esc(f.nome)} — ${esc(f.funcao)}</option>`).join("")}</select>
+          <p class="ajuda">Obrigatório quando a mão de obra é fixa.</p></div>
+      </div>
+      <button class="principal" id="btnIniciar">Iniciar execução</button></div>`:""}
+
+    ${emExecucao?`<div class="bloco"><h3>Prestação de contas</h3>
+      <p class="nota">Feche a lista do que foi realmente aplicado, envie a foto do
+        depois e informe o tempo gasto.</p>
+      <div id="tabExec">${linhasInsumo(executados,"executado",true)}</div>
+      <div class="grade-insumo" style="margin-top:1rem">
+        <div class="campo"><label for="eCod">Código</label><input id="eCod"></div>
+        <div class="campo"><label for="eDesc">Descrição</label><input id="eDesc"></div>
+        <div class="campo"><label for="eUn">Un.</label><input id="eUn" value="un"></div>
+        <div class="campo"><label for="eQtd">Qtd</label><input id="eQtd" type="number" step="0.01" min="0.01"></div>
+        <div class="campo"><label for="eVal">Unitário</label><input id="eVal" type="number" step="0.01" min="0"></div>
+        <div class="campo"><label>&nbsp;</label><button class="discreto" id="btnAddExec">Incluir</button></div>
+      </div>
+      <div class="par">
+        <div class="campo"><label class="obrig" for="fFotoDep">Foto do depois</label>
+          <input id="fFotoDep" type="file" accept="image/*" capture="environment"></div>
+        <div class="campo"><label class="obrig" for="fHoras">Tempo de execução (horas)</label>
+          <input id="fHoras" type="number" step="0.5" min="0.5"></div>
+      </div>
+      <button class="principal" id="btnEncerrar">Registrar atendimento</button></div>`:""}
+
+    <div class="bloco"><h3>Andamento</h3><ul class="linha-tempo">
+      ${(tl||[]).map(t=>`<li><p class="quando">${dataHora(t.criado_em)} · ${esc(t.responsavel)}</p>
+        <p class="oque">${esc(NOME_STATUS[t.status_novo]||t.status_novo)}</p>
+        ${t.observacao?`<p class="obs">${esc(t.observacao)}</p>`:""}</li>`).join("")||
+        `<li><p class="obs">Sem registros.</p></li>`}</ul></div>`;
+
+  document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=async()=>{
+    const {error}=await sb.from("chamado_insumo").delete().eq("id",Number(b.dataset.rm));
+    if(error) return recado("avisoDet",traduzir(error.message),"erro");
+    telaDetalheEmpresa(id);
+  });
+
+  async function incluir(pref,fase){
+    const cod=$(pref+"Cod").value.trim(), desc=$(pref+"Desc").value.trim();
+    const un=$(pref+"Un").value.trim()||"un";
+    const qtd=Number($(pref+"Qtd").value), val=Number($(pref+"Val").value);
+    if(!cod||!desc) return recado("avisoDet","Informe código e descrição do item.","erro");
+    if(!(qtd>0)) return recado("avisoDet","A quantidade precisa ser maior que zero.","erro");
+    if(!(val>=0)) return recado("avisoDet","Informe o valor unitário.","erro");
+    let itemId=null;
+    const tab=Number($("iTab")?.value)||TABELAS[0]?.id;
+    if(tab){
+      const {data:achado}=await sb.from("item_referencia").select("id")
+        .eq("tabela_referencia_id",tab).eq("codigo",cod).maybeSingle();
+      if(achado) itemId=achado.id;
+      else{
+        const {data:novo,error:eN}=await sb.from("item_referencia").insert({
+          tabela_referencia_id:tab,codigo:cod,descricao:desc,unidade_medida:un,
+          valor_unitario:val,status:"PENDENTE_HOMOLOGACAO",criado_por:EU.id
+        }).select("id").single();
+        if(eN) return recado("avisoDet",traduzir(eN.message),"erro");
+        itemId=novo.id;
+      }
+    }
+    const {error}=await sb.from("chamado_insumo").insert({chamado_id:id,fase,
+      item_referencia_id:itemId,codigo_snapshot:cod,descricao_snapshot:desc,
+      unidade_medida_snapshot:un,valor_unitario_snapshot:val,quantidade:qtd,
+      lancado_por:EU.id});
+    if(error) return recado("avisoDet",traduzir(error.message),"erro");
+    telaDetalheEmpresa(id);
+  }
+  if($("btnAddPrev")) $("btnAddPrev").onclick=()=>incluir("i","PREVISTO");
+  if($("btnAddExec")) $("btnAddExec").onclick=()=>incluir("e","EXECUTADO");
+
+  if($("btnOrcar")) $("btnOrcar").onclick=async()=>{
+    const b=$("btnOrcar"); b.disabled=true; b.textContent="Enviando…";
+    const {data,error}=await sb.rpc("enviar_orcamento",{p_chamado:id});
+    b.disabled=false; b.textContent="Enviar orçamento";
+    if(error) return recado("avisoDet",traduzir(error.message),"erro");
+    const msg={AUTORIZADO:"Orçamento aprovado automaticamente. Pode iniciar a execução.",
+      AGUARDANDO_AUTORIZACAO:"Orçamento acima da alçada. Enviado para autorização da fiscalização.",
+      BLOQUEADO_SEM_SALDO:"Não há saldo disponível. A gestão do contrato foi avisada.",
+      EM_EXECUCAO:"Orçamento posterior registrado.",
+      EM_EXECUCAO_AGUARDANDO_RATIFICACAO:"Orçamento registrado. A execução emergencial aguarda ratificação."}[data]||data;
+    await telaDetalheEmpresa(id);
+    recado("avisoDet",msg, data==="BLOQUEADO_SEM_SALDO"?"atencao":"bom");
+  };
+
+  if($("btnIniciar")) $("btnIniciar").onclick=async()=>{
+    const mao=$("fMao").value, func=Number($("fFunc").value)||null;
+    if(mao==="FIXA"&&!func) return recado("avisoDet","Mão de obra fixa exige a indicação do funcionário.","erro");
+    const b=$("btnIniciar"); b.disabled=true; b.textContent="Iniciando…";
+    const {error}=await sb.rpc("iniciar_execucao",{p_chamado:id,p_mao_obra:mao,p_funcionario:func});
+    b.disabled=false; b.textContent="Iniciar execução";
+    if(error) return recado("avisoDet",traduzir(error.message),"erro");
+    await telaDetalheEmpresa(id);
+    recado("avisoDet","Execução iniciada.","bom");
+  };
+
+  if($("btnEncerrar")) $("btnEncerrar").onclick=async()=>{
+    const horas=Number($("fHoras").value), arq=$("fFotoDep").files[0];
+    if(!(horas>0)) return recado("avisoDet","Informe o tempo de execução em horas.","erro");
+    const temFoto=(fotos||[]).some(f=>f.momento==="DEPOIS"&&f.rodada===RODADA);
+    if(!temFoto&&!arq) return recado("avisoDet","A foto do depois é obrigatória.","erro");
+    const b=$("btnEncerrar"); b.disabled=true; b.textContent="Registrando…";
+    try{ if(arq){ b.textContent="Enviando foto…"; await enviarFoto(id,arq,"DEPOIS",RODADA); } }
+    catch(e){ b.disabled=false; b.textContent="Registrar atendimento";
+              return recado("avisoDet",traduzir(e.message),"erro"); }
+    const {error}=await sb.rpc("registrar_atendimento",{p_chamado:id,p_horas:horas});
+    b.disabled=false; b.textContent="Registrar atendimento";
+    if(error) return recado("avisoDet",traduzir(error.message),"erro");
+    await telaEmpresa();
+    recado("avisoEmp","Atendimento registrado. A unidade foi avisada para validar.","bom");
+  };
+}
+
+/* ================================================================
+   PERFIS AINDA SEM TELA
+================================================================ */
 function telaPendente(){
-  $("conteudo").innerHTML = `<div class="bloco">
-    <h3>Tela ainda não construída</h3>
+  $("conteudo").innerHTML=`<div class="bloco"><h3>Tela ainda não construída</h3>
     <p class="nota">Seu acesso funciona e suas permissões estão ativas, mas a tela
       deste perfil entra nas próximas partes.</p>
     <table><tbody>
-      <tr><td>Receber, orçar e executar</td><td>empresa</td></tr>
       <tr><td>Autorizar, controlar cota e emitir relatório</td><td>fiscalização</td></tr>
       <tr><td>Parâmetros, feriados e tabela de preços</td><td>PROAD</td></tr>
     </tbody></table></div>`;
 }
 
-/* ---------------- entrada e roteamento ---------------- */
+/* ================================================================
+   ENTRADA
+================================================================ */
 async function abrirApp(p){
-  EU = p;
-  $("entrada").style.display="none";
-  $("app").style.display="flex";
-  $("tNome").textContent = p.nome_completo;
-  $("tPerfil").textContent = NOME_PERFIL[p.perfil]||p.perfil;
-  $("tVinculo").textContent = p.unidade_nome
-    ? p.unidade_nome + (p.predio_nome ? " · "+p.predio_nome : "")
-    : (p.empresa_nome||"");
+  EU=p; $("entrada").style.display="none"; $("app").style.display="flex";
+  $("tNome").textContent=p.nome_completo;
+  $("tPerfil").textContent=NOME_PERFIL[p.perfil]||p.perfil;
+  $("tVinculo").textContent=p.unidade_nome
+    ? p.unidade_nome+(p.predio_nome?" · "+p.predio_nome:"") : (p.empresa_nome||"");
   if(p.perfil==="DEMANDANTE"){ await carregarCatalogos(); await telaLista(); }
+  else if(p.perfil==="EMPRESA"){ await carregarEmpresa(); await telaEmpresa(); }
   else telaPendente();
 }
 async function carregarPerfil(){
-  const { data:{ user } } = await sb.auth.getUser();
+  const {data:{user}}=await sb.auth.getUser();
   if(!user) return null;
-  const { data } = await sb.from("v_meu_perfil").select("*").eq("id",user.id).single();
+  const {data}=await sb.from("v_meu_perfil").select("*").eq("id",user.id).single();
   return data||null;
 }
 async function seguir(){
-  const p = await carregarPerfil();
+  const p=await carregarPerfil();
   if(!p){ recado("avisoLogin","Seu login funcionou, mas você ainda não tem perfil cadastrado. Procure a PROAD.","erro");
           await sb.auth.signOut(); return; }
   if(!p.ativo){ recado("avisoLogin","Seu acesso está desativado. Procure a PROAD.","erro");
                 await sb.auth.signOut(); return; }
-  if(p.precisa_trocar_senha){
-    $("telaLogin").style.display="none"; $("telaTroca").style.display="block";
-    $("nova1").focus(); return;
-  }
+  if(p.precisa_trocar_senha){ $("telaLogin").style.display="none";
+    $("telaTroca").style.display="block"; $("nova1").focus(); return; }
   await abrirApp(p);
 }
-$("btnEntrar").onclick = async () => {
+$("btnEntrar").onclick=async()=>{
   recado("avisoLogin","");
   const b=$("btnEntrar"); b.disabled=true; b.textContent="Entrando…";
-  const { error } = await sb.auth.signInWithPassword({
-    email:$("email").value.trim(), password:$("senha").value });
+  const {error}=await sb.auth.signInWithPassword({
+    email:$("email").value.trim(),password:$("senha").value});
   b.disabled=false; b.textContent="Entrar";
-  if(error) return recado("avisoLogin", traduzir(error.message), "erro");
+  if(error) return recado("avisoLogin",traduzir(error.message),"erro");
   await seguir();
 };
-$("senha").addEventListener("keydown", e=>{ if(e.key==="Enter") $("btnEntrar").click(); });
-$("btnTrocar").onclick = async () => {
+$("senha").addEventListener("keydown",e=>{ if(e.key==="Enter") $("btnEntrar").click(); });
+$("btnTrocar").onclick=async()=>{
   recado("avisoTroca","");
-  const a=$("nova1").value, b2=$("nova2").value;
+  const a=$("nova1").value,b2=$("nova2").value;
   if(a.length<8) return recado("avisoTroca","A senha precisa ter pelo menos 8 caracteres.","erro");
-  if(a!==b2)     return recado("avisoTroca","As duas senhas não são iguais.","erro");
+  if(a!==b2) return recado("avisoTroca","As duas senhas não são iguais.","erro");
   const bt=$("btnTrocar"); bt.disabled=true; bt.textContent="Salvando…";
-  const { error } = await sb.auth.updateUser({ password:a });
+  const {error}=await sb.auth.updateUser({password:a});
   if(error){ bt.disabled=false; bt.textContent="Salvar senha";
-             return recado("avisoTroca", traduzir(error.message), "erro"); }
-  const { error:e2 } = await sb.rpc("marcar_senha_trocada");
+             return recado("avisoTroca",traduzir(error.message),"erro"); }
+  const {error:e2}=await sb.rpc("marcar_senha_trocada");
   bt.disabled=false; bt.textContent="Salvar senha";
-  if(e2) return recado("avisoTroca", traduzir(e2.message), "erro");
+  if(e2) return recado("avisoTroca",traduzir(e2.message),"erro");
   $("telaTroca").style.display="none"; $("telaLogin").style.display="block";
   await abrirApp(await carregarPerfil());
 };
-$("btnSair").onclick = async () => { await sb.auth.signOut(); location.reload(); };
-(async()=>{ const { data:{session} } = await sb.auth.getSession(); if(session) await seguir(); })();
+$("btnSair").onclick=async()=>{ await sb.auth.signOut(); location.reload(); };
+(async()=>{ const {data:{session}}=await sb.auth.getSession(); if(session) await seguir(); })();
 </script>
 </body>
 </html>
